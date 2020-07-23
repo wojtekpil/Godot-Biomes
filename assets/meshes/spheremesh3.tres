@@ -1,0 +1,11 @@
+[gd_resource type="SphereMesh" load_steps=2 format=2]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.164706, 0.176471, 0.988235, 1 )
+
+[resource]
+material = SubResource( 1 )
+radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 16
