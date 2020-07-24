@@ -3,6 +3,7 @@ extends Particles
 export (int) var id = -1
 export (Array) var sampling_array = []
 export (Vector2) var chunk_size = Vector2(10, 10)
+export (Vector2) var chunk_position = Vector2(0, 0)
 export (Vector2) var stamp_size = Vector2(512, 512)
 export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
 export (bool) var enable_shadows = false
@@ -13,6 +14,7 @@ var ParticlePlacementShader = preload("res://shaders/particle_placer.shader")
 
 
 func setup():
+	self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
 	self.amount = 1
 	self.explosiveness = 1.0
 	self.draw_order = DRAW_ORDER_VIEW_DEPTH
@@ -27,6 +29,7 @@ func setup():
 	self.process_material.shader = ParticlePlacementShader
 	self.process_material.set_shader_param("stamp_size", stamp_size)
 	self.process_material.set_shader_param("chunk_size", chunk_size)
+	self.process_material.set_shader_param("chunk_pos", chunk_position)
 
 
 func generate():
