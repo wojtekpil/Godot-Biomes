@@ -1,12 +1,15 @@
 extends Particles
 
-export (int) var id = -1
 export (Array) var sampling_array = []
+export (bool) var enable_shadows = false
+export (int) var id = -1
+export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
+export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)
 export (Vector2) var stamp_size = Vector2(512, 512)
-export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
-export (bool) var enable_shadows = false
+export (ImageTexture) var densitymap
+
 var _visibility_height_range = 800
 
 var Array2dToShader = preload("res://scripts/Array2DToShader.gd")
@@ -27,13 +30,15 @@ func setup():
 		self.cast_shadow = SHADOW_CASTING_SETTING_ON
 	self.process_material = ShaderMaterial.new()
 	self.process_material.shader = ParticlePlacementShader
-	self.process_material.set_shader_param("stamp_size", stamp_size)
-	self.process_material.set_shader_param("chunk_size", chunk_size)
-	self.process_material.set_shader_param("chunk_pos", chunk_position)
+	self.process_material.set_shader_param("u_stamp_size", stamp_size)
+	self.process_material.set_shader_param("u_chunk_size", chunk_size)
+	self.process_material.set_shader_param("u_chunk_pos", chunk_position)
+	self.process_material.set_shader_param("u_terrain_inv_transform", terrain_inv_transform)
+	self.process_material.set_shader_param("u_densitymap", densitymap)
 
 
 func generate():
 	setup()
 	var tex: ImageTexture = Array2dToShader.generate(sampling_array)
-	self.process_material.set_shader_param("stamp_array", tex)
+	self.process_material.set_shader_param("u_stamp_array", tex)
 	self.amount = sampling_array.size()
