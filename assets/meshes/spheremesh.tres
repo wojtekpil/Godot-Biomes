@@ -1,7 +1,7 @@
 [gd_resource type="SphereMesh" load_steps=2 format=2]
 
 [sub_resource type="SpatialMaterial" id=1]
-albedo_color = Color( 0.988281, 0.166, 0.166, 1 )
+albedo_color = Color( 0.121569, 0.760784, 0.0666667, 1 )
 
 [resource]
 material = SubResource( 1 )
