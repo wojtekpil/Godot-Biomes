@@ -19,6 +19,10 @@ config/name="GodotBiomes"
 run/main_scene="res://ModelsScene.tscn"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "biomes" )
+
 [rendering]
 
 quality/filters/msaa=4
