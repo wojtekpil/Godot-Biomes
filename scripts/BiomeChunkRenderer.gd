@@ -5,13 +5,26 @@ export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)
 export (Transform) var terrain_inv_transform
 
+enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
+export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
+
 var _biomes_subsets = []
 
-var BiomeSubsetRenderer = preload("res://scripts/BiomeSubsetRenderer.gd")
+var BiomeSubsetParticlesRenderer = preload("res://scripts/BiomeSubsetParticlesRenderer.gd")
+var BiomeSubsetMultimeshRenderer = preload("res://scripts/BiomeSubsetMultimeshRenderer.gd")
 
 
 func create_subset_renderer(biome_placement_node, sampling_provider, dithering_scale):
-	var particles = BiomeSubsetRenderer.new()
+	var particles = null
+	match mesh_renderer:
+		MESH_RENDER.Particles:
+			particles = BiomeSubsetParticlesRenderer.new()
+		MESH_RENDER.Particles_GPU_density:
+			particles = BiomeSubsetParticlesRenderer.new()
+			particles.gpu_compute = true
+		_:
+			particles = BiomeSubsetMultimeshRenderer.new()
+
 	particles.id = biome_placement_node.id
 	particles.mesh = biome_placement_node.mesh
 	particles.chunk_size = chunk_size
@@ -21,6 +34,8 @@ func create_subset_renderer(biome_placement_node, sampling_provider, dithering_s
 	particles.densitymap = biome_resource.get_densitymap()
 	particles.terrain_inv_transform = terrain_inv_transform
 	particles.dithering_scale = dithering_scale
+	particles.object_scale = biome_placement_node.scale
+	particles.object_scale_variation = biome_placement_node.scale_variation
 
 	self.add_child(particles)
 

@@ -2,8 +2,8 @@ extends Node
 
 signal stamp_updated(image)
 
-export (Vector2) var stamp_size = Vector2(512, 512)
-export (float) var new_points_retries = 30
+export (Vector2) var stamp_size = Vector2(256, 256)
+export (float) var new_points_retries = 10
 
 var _biome_placement_nodes: Array = []
 var _grid: Array = []
@@ -14,6 +14,7 @@ var _stampImage: Image = null
 var _stamp_array_size = Vector2()
 var _sqrt2 = sqrt(2)
 var _thread: Thread
+var _running: bool = true
 
 var BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
 var StampPoint = preload("res://scripts/StampPoint.gd")
@@ -250,11 +251,14 @@ func generate_stampling():
 
 
 func _background_updater(_userdata):
-	while true:
+	while _running:
 		_semaphore.wait()
+		if not _running:
+			return
 		if _biome_placement_nodes.empty():
 			continue
 		generate_stampling()
+		OS.delay_msec(1000)
 
 
 func setup_biome_placement_nodes(nodes: Array):
@@ -284,3 +288,9 @@ func _init():
 	_thread = Thread.new()
 	_semaphore = Semaphore.new()
 	_thread.start(self, "_background_updater")
+
+
+func _exit_tree():
+	_running = false
+	_semaphore.post()
+	_thread.wait_to_finish()

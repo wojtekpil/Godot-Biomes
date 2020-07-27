@@ -6,6 +6,9 @@ export (float) var density = 1.0
 export (Color) var color = Color(0, 0, 0)
 export (Mesh) var mesh
 export (bool) var cast_shadow = false
+export (Vector3) var scale = Vector3(1.0, 1.0, 1.0)
+export (float) var scale_variation = 0.0
+
 static func compare_by_footprint(a, b):
 	return a.footprint < b.footprint
 

@@ -16,8 +16,10 @@ _global_script_class_icons={
 [application]
 
 config/name="GodotBiomes"
+run/main_scene="res://ModelsScene.tscn"
 config/icon="res://icon.png"
 
 [rendering]
 
+quality/filters/msaa=4
 environment/default_environment="res://default_env.tres"

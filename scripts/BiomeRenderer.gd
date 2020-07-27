@@ -1,7 +1,12 @@
+tool
 extends Spatial
 
-export (Vector2) var chunk_size = Vector2(10, 10)
+export (Vector2) var chunk_size = Vector2(32, 32)
+export (float) var visibility_range = 10
 export (NodePath) var terrain = null
+
+enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
+export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 
 var _biomes: Array = []
 var _sampling_provider_script = preload("res://scripts/PoissonDisc.gd")
@@ -25,6 +30,7 @@ func create_chunk_renderer(chunk_position: Vector2, terrain_inv_transform: Trans
 	chunk.chunk_position = chunk_position
 	chunk.biome_resource = _biome_resource
 	chunk.terrain_inv_transform = terrain_inv_transform
+	chunk.mesh_renderer = mesh_renderer
 
 	self.add_child(chunk)
 	return chunk
@@ -36,8 +42,9 @@ func _ready():
 
 	bootstrap_biome()
 	_sampling_provider.connect("stamp_updated", self, "_on_stamp_updated")
-	for x in range(-1, 2):
-		for y in range(-1, 2):
+	var chunks: Vector2 = Vector2(visibility_range/chunk_size.x, visibility_range/chunk_size.y)
+	for x in range(0, chunks.x + 1):
+		for y in range(0, chunks.y + 1):
 			_biomes.append(create_chunk_renderer(Vector2(x, y) * chunk_size, terrain_inv_transform))
 
 

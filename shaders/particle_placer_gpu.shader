@@ -8,6 +8,8 @@ uniform vec2 u_chunk_size;
 uniform vec2 u_chunk_pos = vec2(0,0);
 uniform float u_dithering_scale = 10.0;
 uniform mat4 u_terrain_inv_transform;
+uniform vec3 u_scale = vec3(1.0);
+uniform float u_scale_variaton = 0.0;
 
 
 float get_hash(vec2 c) {
@@ -69,6 +71,7 @@ void vertex()
 {
 	if (RESTART) {
 		float hash = get_hash(u_chunk_pos.xy);
+		vec3 scale = u_scale +  hash*u_scale_variaton*u_scale;
 
 		vec3 pos = vec3(0.0);
 		vec2 data_array = get_array_value(u_stamp_array, ivec2(INDEX, 0));
@@ -82,10 +85,10 @@ void vertex()
 
 		vec3 cell_coords = (u_terrain_inv_transform * obj_pos).xyz;
 		//TODO: temporary
-		//terrain transform if from the center of 32x32 plane
-		cell_coords.xz += 16f;
+		//terrain transform if from the center of 20x20 plane
+		cell_coords.xz += 10f;
 		//TODO: it should be passed via uniform (terrain size?), tranform to 0..1
-		vec2 terrain_uv =  cell_coords.xz/32f;
+		vec2 terrain_uv =  cell_coords.xz/20f;
 		float density = texture(u_densitymap, terrain_uv).r;
 		if (dither_object(density,data_array / u_dithering_scale))
 		{
@@ -94,8 +97,18 @@ void vertex()
 			TRANSFORM[0][0] = 0.0;
 			ACTIVE = false;
 		}
+
+		TRANSFORM[0][0] *= cos(u_scale_variaton);
+		TRANSFORM[0][2] *= -sin(u_scale_variaton);
+		TRANSFORM[2][0] *= sin(u_scale_variaton);
+		TRANSFORM[2][2] *= cos(u_scale_variaton);
+
 		TRANSFORM[3][0] = pos.x;
 		TRANSFORM[3][1] = pos.y;
 		TRANSFORM[3][2] = pos.z;
+
+		TRANSFORM[0][0] *= scale.x;
+		TRANSFORM[1][1] *= scale.y;
+		TRANSFORM[2][2] *= scale.z;
 	}
 }
