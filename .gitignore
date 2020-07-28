@@ -3,3 +3,5 @@
 .import/
 logs/
 mono_crash*
+exports/
+assets/tests
