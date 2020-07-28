@@ -1,7 +1,7 @@
 tool
 extends EditorPlugin
 
-const MainPanel = preload("res://BiomeEditor.tscn")
+const MainPanel = preload("res://addons/biomes/BiomeEditor.tscn")
 
 var main_panel_instance
 

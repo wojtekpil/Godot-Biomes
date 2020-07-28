@@ -92,7 +92,6 @@ func _generate_subset(_userdata):
 		_semaphore.wait()
 		if not _running:
 			return
-		print(object_scale_variation)
 		var sampled_points = _sample_by_denisty()
 		self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
 		rng.seed = int(self.global_transform.origin.length())

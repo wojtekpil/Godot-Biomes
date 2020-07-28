@@ -1,7 +1,7 @@
 extends MeshInstance
 
 var _biome_placement_nodes: Array = []
-var _sampling_provider_script = preload("res://scripts/PoissonDisc.gd")
+var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 
 var Array2dToShader = preload("res://scripts/Array2DToShader.gd")
 var BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")

@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/biomes/BiomeEditor.gd" type="Script" id=1]
+
+[node name="BiomeEditor" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddMeshNodeButton" type="Button" parent="HBoxContainer"]
+margin_right = 76.0
+margin_bottom = 20.0
+text = "Add Mesh"
+
+[node name="AddTextureNodeButton" type="Button" parent="HBoxContainer"]
+margin_left = 80.0
+margin_right = 169.0
+margin_bottom = 20.0
+text = "Add Texture"
+
+[node name="AddSubsetNodeButton" type="Button" parent="HBoxContainer"]
+margin_left = 173.0
+margin_right = 257.0
+margin_bottom = 20.0
+text = "Add Subset"
+
+[node name="AddRendererNodeButton" type="Button" parent="HBoxContainer"]
+margin_left = 261.0
+margin_right = 360.0
+margin_bottom = 20.0
+text = "Add Renderer"
+
+[node name="BiomeGraphEdit" type="GraphEdit" parent="."]
+margin_top = 24.0
+margin_right = 1024.0
+margin_bottom = 624.0
+rect_min_size = Vector2( 300, 600 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_offset = Vector2( -300, -300 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="HBoxContainer/AddMeshNodeButton" to="." method="_on_AddMeshNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddTextureNodeButton" to="." method="_on_AddTextureNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddSubsetNodeButton" to="." method="_on_AddSubsetNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddRendererNodeButton" to="." method="_on_AddRendererNodeButton_pressed"]
+[connection signal="connection_request" from="BiomeGraphEdit" to="." method="_on_BiomeGraphEdit_connection_request"]
