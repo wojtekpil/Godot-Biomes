@@ -38,9 +38,15 @@ margin_right = 257.0
 margin_bottom = 20.0
 text = "Add Subset"
 
-[node name="AddRendererNodeButton" type="Button" parent="HBoxContainer"]
+[node name="AddTransformNodeButton" type="Button" parent="HBoxContainer"]
 margin_left = 261.0
-margin_right = 360.0
+margin_right = 366.0
+margin_bottom = 20.0
+text = "Add Transform"
+
+[node name="AddRendererNodeButton" type="Button" parent="HBoxContainer"]
+margin_left = 370.0
+margin_right = 469.0
 margin_bottom = 20.0
 text = "Add Renderer"
 
@@ -58,5 +64,6 @@ __meta__ = {
 [connection signal="pressed" from="HBoxContainer/AddMeshNodeButton" to="." method="_on_AddMeshNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddTextureNodeButton" to="." method="_on_AddTextureNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddSubsetNodeButton" to="." method="_on_AddSubsetNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddTransformNodeButton" to="." method="_on_AddTransformNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddRendererNodeButton" to="." method="_on_AddRendererNodeButton_pressed"]
 [connection signal="connection_request" from="BiomeGraphEdit" to="." method="_on_BiomeGraphEdit_connection_request"]

@@ -4,7 +4,7 @@ var _biome_placement_nodes: Array = []
 var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 
 var Array2dToShader = preload("res://scripts/Array2DToShader.gd")
-var BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
+var BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
 
 onready var _sampling_provider = _sampling_provider_script.new()
 

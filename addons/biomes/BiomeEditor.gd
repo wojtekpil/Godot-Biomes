@@ -4,6 +4,7 @@ extends Control
 var BiomeNodeMesh = load("res://addons/biomes/nodes/mesh/BiomeNodeMesh.tscn")
 var BiomeNodeTexture = load("res://addons/biomes/nodes/texture/BiomeNodeTexture.tscn")
 var BiomeNodeSubset = load("res://addons/biomes/nodes/subset/BiomeNodeSubset.tscn")
+var BiomeNodeTransform = load("res://addons/biomes/nodes/transform/BiomeNodeTransform.tscn")
 var BiomeNodeRenderer = load("res://addons/biomes/nodes/renderer/BiomeNodeRenderer.tscn")
 
 var _preview_provider: EditorResourcePreview = null
@@ -52,6 +53,7 @@ func _on_AddRendererNodeButton_pressed():
 	var node = BiomeNodeRenderer.instance()
 	assert(node is GraphNode)
 	node.offset += Vector2(20, 20)
+	node.call_deferred("setup_dialogs", self)
 	_ge.add_child(node)
 
 
@@ -62,6 +64,15 @@ func _on_AddTextureNodeButton_pressed():
 	assert(node is GraphNode)
 	node.offset += Vector2(20, 20)
 	node.call_deferred("setup_dialogs", self)
+	_ge.add_child(node)
+
+
+func _on_AddTransformNodeButton_pressed():
+	assert(BiomeNodeTransform, "Failed to load node")
+	assert(BiomeNodeTransform.can_instance(), "Cannot create instance of node")
+	var node = BiomeNodeTransform.instance()
+	assert(node is GraphNode)
+	node.offset += Vector2(20, 20)
 	_ge.add_child(node)
 
 

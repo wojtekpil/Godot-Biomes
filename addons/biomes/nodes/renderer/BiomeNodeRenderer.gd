@@ -3,13 +3,18 @@ extends 'res://addons/biomes/BiomeNode.gd'
 
 var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 var _biome_placement_nodes: Array = []
+var _resources: Array = []
+var _density_path: String = ""
+var _file_dialog: FileDialog = null
 
-const BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
+const BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
+const BiomeResource = preload("res://addons/biomes/scripts/BiomeResource.gd")
 
 onready var _sampling_provider = _sampling_provider_script.new()
 
 const SUBSET_PORT = 0
 const DENSITY_PORT = 1
+
 
 func _ready():
 	set_slot(SUBSET_PORT, true, 2, Color(0, 1, 0), false, 3, Color(0, 1, 0))
@@ -17,6 +22,17 @@ func _ready():
 	set_slot(2, false, 10, Color(0, 0, 0), false, 3, Color(0, 1, 0))
 	setup_biome()
 
+
+func setup_dialogs(base_control):
+	_file_dialog = FileDialog.new()
+	_file_dialog.resizable = true
+	_file_dialog.rect_min_size = Vector2(300, 200)
+	_file_dialog.access = FileDialog.ACCESS_RESOURCES
+	_file_dialog.mode = FileDialog.MODE_SAVE_FILE
+	_file_dialog.add_filter("*.tres; resource files")
+	_file_dialog.connect("file_selected", self, "_on_FileDialog_file_selected")
+	_file_dialog.hide()
+	base_control.add_child(_file_dialog)
 
 func is_multiple_connections_enabled_on_slot(_slot: int):
 	return _slot == SUBSET_PORT
@@ -37,16 +53,15 @@ func _on_stamp_updated(image: Image):
 	apply_texture(image)
 
 
-func _on_GenerateButton_pressed():
+func generate_biome():
 	var ge: GraphEdit = get_parent()
 	var childs = []
-	var resources: Array = []
 	var connected_graph = get_parent().get_connection_list()
-	var density_path: String = ""
+	_resources = []
 	for x in connected_graph:
 		if x['to'] == self.name:
 			childs.append(x)
-	
+
 	print("From Renderer:")
 	print(childs)
 
@@ -58,11 +73,28 @@ func _on_GenerateButton_pressed():
 			continue
 		if c['to_port'] == SUBSET_PORT:
 			resource.id = id
-			resources.append(resource)
+			_resources.append(resource)
 			id += 1
 		if c['to_port'] == DENSITY_PORT:
-			density_path = resource
+			_density_path = resource
 	print("From Renderer:")
-	print(density_path)
-	print(resources)
-	_sampling_provider.setup_biome_placement_nodes(resources)
+	print(_density_path)
+	print(_resources)
+	_sampling_provider.setup_biome_placement_nodes(_resources)
+
+
+func _on_GenerateButton_pressed():
+	generate_biome()
+
+
+func _on_SaveResourceButton_pressed():
+	if _resources.size() == 0:
+		generate_biome()
+	_file_dialog.popup_centered_ratio(0.5)
+
+
+func _on_FileDialog_file_selected(fpath):
+	var b_res = BiomeResource.new()
+	b_res.biome_subsets = _resources
+	b_res.biome_density_map_path = _density_path
+	ResourceSaver.save(fpath, b_res)

@@ -8,19 +8,19 @@ margin_bottom = 124.0
 rect_clip_content = true
 title = "Subset"
 show_close = true
-slot/0/left_enabled = true
+slot/0/left_enabled = false
 slot/0/left_type = 1
 slot/0/left_color = Color( 1, 0, 0, 1 )
 slot/0/right_enabled = true
-slot/0/right_type = 2
-slot/0/right_color = Color( 0, 1, 0, 1 )
-slot/1/left_enabled = true
+slot/0/right_type = 5
+slot/0/right_color = Color( 0, 1, 1, 1 )
+slot/1/left_enabled = false
 slot/1/left_type = 1
 slot/1/left_color = Color( 1, 0, 0, 1 )
 slot/1/right_enabled = false
 slot/1/right_type = 2
 slot/1/right_color = Color( 0, 1, 0, 1 )
-slot/2/left_enabled = true
+slot/2/left_enabled = false
 slot/2/left_type = 1
 slot/2/left_color = Color( 1, 0, 0, 1 )
 slot/2/right_enabled = false
@@ -44,6 +44,12 @@ slot/5/left_color = Color( 1, 1, 1, 1 )
 slot/5/right_enabled = false
 slot/5/right_type = 0
 slot/5/right_color = Color( 1, 1, 1, 1 )
+slot/6/left_enabled = false
+slot/6/left_type = 0
+slot/6/left_color = Color( 1, 1, 1, 1 )
+slot/6/right_enabled = false
+slot/6/right_type = 0
+slot/6/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -115,11 +121,18 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="."]
+[node name="MeshTransform" type="Label" parent="."]
 margin_left = 16.0
 margin_top = 119.0
 margin_right = 175.0
-margin_bottom = 139.0
+margin_bottom = 133.0
+text = "Mesh Transform"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 134.0
+margin_right = 175.0
+margin_bottom = 154.0
 
 [node name="Label" type="Label" parent="HBoxContainer6"]
 margin_top = 3.0

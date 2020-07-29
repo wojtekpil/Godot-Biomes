@@ -11,7 +11,7 @@ var _biome_density_map: Image
 var _biome_placement_nodes: Array
 var _biome_min_footprint: float = -1.0
 
-var BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
+var BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
 
 func _init():
 	var biome1 = BiomePlacementNode.new()

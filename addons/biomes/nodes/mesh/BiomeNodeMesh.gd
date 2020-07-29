@@ -5,7 +5,7 @@ var _file_dialog: FileDialog = null
 var _preview_provider: EditorResourcePreview = null
 var _meshfile = null
 
-const BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
+const BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
 
 
 func _ready():
@@ -68,5 +68,5 @@ func generate_resource(output_slot: int):
 	if _meshfile == null:
 		return null
 
-	resource.mesh = _meshfile
+	resource.mesh = load(_meshfile)
 	return resource

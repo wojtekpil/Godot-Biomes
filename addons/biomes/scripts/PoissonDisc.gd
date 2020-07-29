@@ -16,7 +16,7 @@ var _sqrt2 = sqrt(2)
 var _thread: Thread
 var _running: bool = true
 
-var BiomePlacementNode = preload("res://scripts/BiomePlacementNode.gd")
+var BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
 var StampPoint = preload("res://scripts/StampPoint.gd")
 
 
