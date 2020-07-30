@@ -17,8 +17,8 @@ const DENSITY_PORT = 1
 
 
 func _ready():
-	set_slot(SUBSET_PORT, true, 2, Color(0, 1, 0), false, 3, Color(0, 1, 0))
-	set_slot(DENSITY_PORT, true, 3, Color(0, 0, 1), false, 3, Color(0, 1, 0))
+	set_slot(0, true, 2, Color(0, 1, 0), false, 3, Color(0, 1, 0))
+	set_slot(1, true, 3, Color(0, 0, 1), false, 3, Color(0, 1, 0))
 	set_slot(2, false, 10, Color(0, 0, 0), false, 3, Color(0, 1, 0))
 	setup_biome()
 
