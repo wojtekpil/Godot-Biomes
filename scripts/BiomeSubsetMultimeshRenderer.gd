@@ -93,6 +93,11 @@ func _generate_subset(_userdata):
 		if not _running:
 			return
 		var sampled_points = _sample_by_denisty()
+		if sampled_points.size() == 0:
+			self.visible = false
+			return
+		else:
+			self.visible = true
 		self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
 		rng.seed = int(self.global_transform.origin.length())
 		if sampled_points.size() > self.multimesh.instance_count:
@@ -114,12 +119,6 @@ func _generate_subset(_userdata):
 			var t = Transform(tb)
 			t.origin = position
 			self.multimesh.set_instance_transform(i, t)
-
-		if sampled_points.size() == 0:
-			self.visible = false
-			return
-		else:
-			self.visible = true
 
 
 func _ready():
