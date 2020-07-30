@@ -1,10 +1,10 @@
-extends Particles
+extends MultiMeshInstance
 
 export (Array) var sampling_array = []
 export (bool) var enable_shadows = false
-export (bool) var gpu_compute = false
 export (Image) var densitymap
 export (int) var id = -1
+export (int) var maximum_instance_count = 100
 export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
 export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
@@ -13,16 +13,12 @@ export (Vector2) var stamp_size = Vector2(256, 256)
 export (float) var dithering_scale = 10.0
 export (Vector3) var object_scale = Vector3(1, 1, 1)
 export (float) var object_scale_variation = 0.3
-export (float) var object_rotation_variation = 3.14*2.0
+export (float) var object_rotation_variation = 3.14 * 2.0
 
 var _visibility_height_range = 800
 var _semaphore: Semaphore
 var _thread: Thread
 var _running = true
-
-var Array2dToShader = preload("res://scripts/Array2DToShader.gd")
-var ParticlePlacementShader = preload("res://shaders/particle_placer.shader")
-var ParticlePlacementShaderGPU = preload("res://shaders/particle_placer_gpu.shader")
 
 
 func _dither_density(fade: float, pos: Vector2):
@@ -86,60 +82,53 @@ func _get_density_texture():
 	return it
 
 
-func setup():
-	self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
-	self.visibility_aabb = AABB(
-		Vector3(0, -_visibility_height_range / 2, 0),
-		Vector3(chunk_size.x, _visibility_height_range, chunk_size.y)
-	)
-	if enable_shadows:
-		self.cast_shadow = SHADOW_CASTING_SETTING_ON
-	else:
-		self.cast_shadow = SHADOW_CASTING_SETTING_OFF
-	if gpu_compute:
-		self.process_material.set_shader_param("u_densitymap", _get_density_texture())
-		self.process_material.set_shader_param("u_dithering_scale", dithering_scale)
-
-	self.process_material.set_shader_param("u_stamp_size", stamp_size)
-	self.process_material.set_shader_param("u_chunk_size", chunk_size)
-	self.process_material.set_shader_param("u_chunk_pos", chunk_position)
-	self.process_material.set_shader_param("u_terrain_inv_transform", terrain_inv_transform)
-	self.process_material.set_shader_param("u_scale", object_scale)
-	self.process_material.set_shader_param("u_scale_variaton", object_scale_variation)
-	self.process_material.set_shader_param("u_rotation_variaton", object_rotation_variation)
-
-
 func _generate_subset(_userdata):
+	var rng = RandomNumberGenerator.new()
 	while _running:
 		_semaphore.wait()
 		if not _running:
 			return
-		var sampled_points = sampling_array
-		if not gpu_compute:
-			sampled_points = _sample_by_denisty()
+		var sampled_points = _sample_by_denisty()
 		if sampled_points.size() == 0:
 			self.visible = false
 			return
 		else:
 			self.visible = true
-		setup()
-		var tex: ImageTexture = Array2dToShader.generate(sampled_points)
-		self.process_material.set_shader_param("u_stamp_array", tex)
-		self.amount = sampled_points.size()
-
+		self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
+		rng.seed = int(self.global_transform.origin.length())
+		if sampled_points.size() > self.multimesh.instance_count:
+			self.multimesh.instance_count = sampled_points.size()
+		self.multimesh.visible_instance_count = sampled_points.size()
+		for i in range(sampled_points.size()):
+			var pos2: Vector2 = sampled_points[i] / (stamp_size / chunk_size)
+			var position = Vector3(pos2.x, 0, pos2.y)
+			var rand_hash = rng.randf_range(0.0, 1.0)
+			var rand_scale3 = (
+				Vector3(rand_hash, rand_hash, rand_hash)
+				* object_scale_variation
+				* object_scale
+			)
+			var rand_rotation = rand_hash * object_rotation_variation
+			var tb = Basis()
+			tb = tb.scaled(Vector3(object_scale + rand_scale3))
+			tb = tb.rotated(Vector3.UP, rand_rotation)
+			var t = Transform(tb)
+			t.origin = position
+			self.multimesh.set_instance_transform(i, t)
 
 
 func _ready():
-	self.visible = true
-	self.explosiveness = 1.0
-	self.draw_order = DRAW_ORDER_VIEW_DEPTH
-	self.draw_pass_1 = mesh
-	self.process_material = ShaderMaterial.new()
-	if gpu_compute:
-		self.process_material.shader = ParticlePlacementShaderGPU
-	else:
-		self.process_material.shader = ParticlePlacementShader
-	self.amount = 1
+	self.visible = false
+	self.multimesh = MultiMesh.new()
+	self.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	self.multimesh.color_format = MultiMesh.COLOR_NONE
+	self.multimesh.custom_data_format = MultiMesh.CUSTOM_DATA_NONE
+	self.multimesh.instance_count = maximum_instance_count
+	self.multimesh.visible_instance_count = 0
+	self.multimesh.mesh = mesh
+	for i in range(self.multimesh.instance_count):
+		var t = Transform(Basis(), Vector3(0, 0, 0))
+		self.multimesh.set_instance_transform(i, t)
 	_thread = Thread.new()
 	_semaphore = Semaphore.new()
 	_thread.start(self, "_generate_subset")

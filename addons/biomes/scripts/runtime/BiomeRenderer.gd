@@ -12,7 +12,7 @@ export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 var _biomes: Array = []
 var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 
-var BiomeChunkRenderer = preload("res://scripts/BiomeChunkRenderer.gd")
+var BiomeChunkRenderer = preload("res://addons/biomes/scripts/runtime/BiomeChunkRenderer.gd")
 var BiomeDummyResource = preload("res://scripts/BiomeDummyResource.gd")
 var BiomeResource = preload("res://addons/biomes/scripts/BiomeResource.gd")
 

@@ -17,7 +17,7 @@ var _thread: Thread
 var _running: bool = true
 
 var BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
-var StampPoint = preload("res://scripts/StampPoint.gd")
+var StampPoint = preload("res://addons/biomes/scripts/StampPoint.gd")
 
 
 func grid_generate(width: int, height: int, min_dist: float):

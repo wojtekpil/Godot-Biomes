@@ -1,5 +1,5 @@
 tool
-extends 'res://addons/biomes/BiomeNode.gd'
+extends 'res://addons/biomes/nodes/BiomeNode.gd'
 
 var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 var _biome_placement_nodes: Array = []

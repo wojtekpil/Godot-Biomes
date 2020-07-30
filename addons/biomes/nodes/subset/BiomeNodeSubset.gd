@@ -1,5 +1,5 @@
 tool
-extends 'res://addons/biomes/BiomeNode.gd'
+extends 'res://addons/biomes/nodes/BiomeNode.gd'
 
 const LOD0_MESH_PORT = 0
 const LOD1_MESH_PORT = 1
@@ -49,4 +49,5 @@ func generate_resource(output_slot: int):
 	resource.density = $'HBoxContainer5/Frequency'.value
 	resource.footprint = $'HBoxContainer4/Footprint'.value
 	resource.color = $'HBoxContainer6/DebColor'.color
+	resource.cast_shadow = $'HBoxContainer7/ShadowsButton'.pressed
 	return resource

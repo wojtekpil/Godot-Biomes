@@ -1,5 +1,5 @@
 tool
-extends 'res://addons/biomes/BiomeNode.gd'
+extends 'res://addons/biomes/nodes/BiomeNode.gd'
 
 var _file_dialog: FileDialog = null
 var _preview_provider: EditorResourcePreview = null

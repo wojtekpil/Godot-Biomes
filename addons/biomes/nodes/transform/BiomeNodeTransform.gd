@@ -1,5 +1,5 @@
 tool
-extends 'res://addons/biomes/BiomeNode.gd'
+extends 'res://addons/biomes/nodes/BiomeNode.gd'
 
 const BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
 

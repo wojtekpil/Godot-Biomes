@@ -10,8 +10,8 @@ export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 
 var _biomes_subsets = []
 
-var BiomeSubsetParticlesRenderer = preload("res://scripts/BiomeSubsetParticlesRenderer.gd")
-var BiomeSubsetMultimeshRenderer = preload("res://scripts/BiomeSubsetMultimeshRenderer.gd")
+var BiomeSubsetParticlesRenderer = preload("res://addons/biomes/scripts/runtime/BiomeSubsetParticlesRenderer.gd")
+var BiomeSubsetMultimeshRenderer = preload("res://addons/biomes/scripts/runtime/BiomeSubsetMultimeshRenderer.gd")
 
 
 func create_subset_renderer(biome_placement_node, sampling_provider, dithering_scale):
