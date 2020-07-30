@@ -126,6 +126,10 @@ func _ready():
 	self.multimesh.instance_count = maximum_instance_count
 	self.multimesh.visible_instance_count = 0
 	self.multimesh.mesh = mesh
+	if enable_shadows:
+		self.cast_shadow = SHADOW_CASTING_SETTING_ON
+	else:
+		self.cast_shadow = SHADOW_CASTING_SETTING_OFF
 	for i in range(self.multimesh.instance_count):
 		var t = Transform(Basis(), Vector3(0, 0, 0))
 		self.multimesh.set_instance_transform(i, t)
