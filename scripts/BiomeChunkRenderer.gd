@@ -1,6 +1,6 @@
 extends Spatial
 
-export (Array) var biome_resource = []
+export (Resource) var biome_resource = null
 export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)
 export (Transform) var terrain_inv_transform
@@ -44,7 +44,7 @@ func create_subset_renderer(biome_placement_node, sampling_provider, dithering_s
 
 func generate(sampling_provider: Node):
 	var biome: Object = null
-	var biome_data: Array = biome_resource.get_biome_placement_nodes()
+	var biome_data: Array = biome_resource.get_biome_subsets()
 	var dithering_scale = biome_resource.get_min_footprint()
 	for x in biome_data:
 		biome = create_subset_renderer(x, sampling_provider, dithering_scale)

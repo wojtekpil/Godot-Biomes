@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/BiomeRenderer.gd" type="Script" id=1]
+[ext_resource path="res://resources/biome1.tres" type="Resource" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "camera_rotate"
@@ -30,6 +31,7 @@ size = Vector2( 20, 20 )
 
 [node name="BiomeRenderer" type="Spatial" parent="."]
 script = ExtResource( 1 )
+biome = ExtResource( 2 )
 chunk_size = Vector2( 7, 7 )
 visibility_range = 21.0
 terrain = NodePath("../Terrain")
@@ -52,6 +54,6 @@ shadow_bias = 0.05
 shadow_contact = 0.3
 
 [node name="Terrain" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.264, 0, 11.329 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.264, 0.0343606, 11.329 )
 mesh = SubResource( 3 )
 material/0 = null

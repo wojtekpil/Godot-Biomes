@@ -23,3 +23,7 @@ func get_min_footprint():
 		for x in biome_subsets:
 			_biome_min_footprint = min(_biome_min_footprint, x.footprint)
 	return _biome_min_footprint
+
+func load(data: Resource):
+	self.biome_subsets = data.biome_subsets
+	self.biome_density_map_path = data.biome_density_map_path
