@@ -107,7 +107,7 @@ func _generate_subset(_userdata):
 		var sampled_points = _sample_by_denisty()
 		if sampled_points.size() == 0:
 			self.visible = false
-			return
+			continue
 		else:
 			self.visible = true
 		self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)

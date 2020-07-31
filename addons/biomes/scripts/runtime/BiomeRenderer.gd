@@ -105,5 +105,11 @@ func _on_stamp_updated(_image):
 func _on_data_region_changed(x, y, w, h, channel):
 	#we can determine which chunks to update
 	print("Region changed %d %d %d %d" % [x, y, w, h])
-	for x in _biomes:
-		x.update_chunk()
+	for c in _biomes:
+		if (
+			c.chunk_position.x >= x
+			&& c.chunk_position.x < x + w
+			&& c.chunk_position.y >= y
+			&& c.chunk_position.y < y + w
+		):
+			c.update_chunk()
