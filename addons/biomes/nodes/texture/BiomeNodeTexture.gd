@@ -5,10 +5,11 @@ var _file_dialog: FileDialog = null
 var _preview_provider: EditorResourcePreview = null
 var _imagepath = null
 
+const BiomeTexture = preload("res://addons/biomes/scripts/BiomeTextureResource.gd")
+
 
 func _ready():
 	set_slot(0, false, 0, Color(0, 0, 0), true, 3, Color(0, 0, 1))
-
 
 
 func setup_dialogs(base_control):
@@ -35,7 +36,6 @@ func _preview_texture(image_path):
 	$'VBoxContainer/Panel/TexturePreview'.texture = texture
 
 
-
 func _on_EditorResourcePreview_preview_loaded(path, texture, userdata):
 	if texture != null:
 		$'VBoxContainer/Panel/TexturePreview'.texture = texture
@@ -54,4 +54,6 @@ func _on_SelectButton_pressed():
 
 
 func generate_resource(output_slot: int):
-	return _imagepath
+	var st = BiomeTexture.new()
+	st.path = _imagepath
+	return st

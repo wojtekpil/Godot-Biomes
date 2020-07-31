@@ -1,7 +1,7 @@
 tool
 extends 'res://addons/biomes/nodes/BiomeNode.gd'
 
-const BiomeZylannTexture = preload("res://addons/biomes/scripts/BiomeZylannTextureResurce.gd")
+const BiomeZylannTexture = preload("res://addons/biomes/scripts/BiomeZylannTextureResource.gd")
 
 
 func _ready():

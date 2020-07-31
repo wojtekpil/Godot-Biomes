@@ -4,7 +4,7 @@ extends 'res://addons/biomes/nodes/BiomeNode.gd'
 var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc.gd")
 var _biome_placement_nodes: Array = []
 var _resources: Array = []
-var _density_path: String = ""
+var _density: Resource = null
 var _heightmap: Resource = null
 var _file_dialog: FileDialog = null
 
@@ -82,13 +82,13 @@ func generate_biome():
 			_resources.append(resource)
 			id += 1
 		if c['to_port'] == DENSITY_PORT:
-			_density_path = resource
+			_density = resource
 		if c['to_port'] == HEIGHTMAP_PORT:
 			print("Heighmap found")
 			_heightmap = resource
 
 	print("From Renderer:")
-	print(_density_path)
+	print(_density)
 	print(_heightmap)
 	print(_resources)
 	_sampling_provider.setup_biome_placement_nodes(_resources)
@@ -107,6 +107,6 @@ func _on_SaveResourceButton_pressed():
 func _on_FileDialog_file_selected(fpath):
 	var b_res = BiomeResource.new()
 	b_res.biome_subsets = _resources
-	b_res.biome_density_map_path = _density_path
+	b_res.biome_density = _density
 	b_res.biome_heightmap = _heightmap
 	ResourceSaver.save(fpath, b_res)
