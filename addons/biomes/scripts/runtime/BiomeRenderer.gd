@@ -21,13 +21,13 @@ onready var _sampling_provider = _sampling_provider_script.new()
 onready var _terrain = get_node(terrain)
 
 
-func bootstrap_biome():
+func _bootstrap_biome():
 	_biome_resource.load(biome)
 	var biome_placement_nodes = _biome_resource.get_biome_subsets()
 	_sampling_provider.setup_biome_placement_nodes(biome_placement_nodes)
 
 
-func create_chunk_renderer(
+func _create_chunk_renderer(
 	chunk_position: Vector2,
 	terrain_inv_transform: Transform,
 	terrain_size: Vector2,
@@ -68,7 +68,12 @@ func _get_terrain_pivot(terrain: Node):
 	if terrain is MeshInstance:
 		return _terrain.mesh.size / 2.0
 	if "HTerrainData" in terrain:  #its Zylann's
-		return Vector2(0,0)
+		return Vector2(0, 0)
+
+
+func _setup_live_update(terrain: Node):
+	if "HTerrainData" in terrain:  #its Zylann's
+		terrain.get_data().connect("region_changed", self, "_on_data_region_changed")
 
 
 # Called when the node enters the scene tree for the first time.
@@ -79,13 +84,14 @@ func _ready():
 	var terrain_inv_transform: Transform = _get_terrain_inv_transform(_terrain)
 	var terrain_size: Vector2 = _get_terrain_size(_terrain)
 	var terrain_pivot: Vector2 = _get_terrain_pivot(_terrain)
-	bootstrap_biome()
+	_bootstrap_biome()
+	_setup_live_update(_terrain)
 	_sampling_provider.connect("stamp_updated", self, "_on_stamp_updated")
 	var chunks: Vector2 = Vector2(visibility_range / chunk_size.x, visibility_range / chunk_size.y)
 	for x in range(0, chunks.x + 1):
 		for y in range(0, chunks.y + 1):
 			_biomes.append(
-				create_chunk_renderer(
+				_create_chunk_renderer(
 					Vector2(x, y) * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot
 				)
 			)
@@ -94,3 +100,10 @@ func _ready():
 func _on_stamp_updated(_image):
 	for x in _biomes:
 		x.generate(_sampling_provider)
+
+
+func _on_data_region_changed(x, y, w, h, channel):
+	#we can determine which chunks to update
+	print("Region changed %d %d %d %d" % [x, y, w, h])
+	for x in _biomes:
+		x.update_chunk()

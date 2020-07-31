@@ -68,7 +68,6 @@ func _sample_by_denisty():
 	local_density.lock()
 
 	if heightmap:
-		print("Heightmap is not null :)")
 		local_heightmap = heightmap.duplicate()
 		local_heightmap.lock()
 	for pos in sampling_array:

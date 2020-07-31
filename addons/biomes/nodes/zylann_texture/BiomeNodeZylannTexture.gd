@@ -19,5 +19,7 @@ func generate_resource(_output_slot: int):
 			bz.type = bz.TEXTURE_TYPE.DETAIL
 		3:
 			bz.type = bz.TEXTURE_TYPE.ALBEDO
+		4:
+			bz.type = bz.TEXTURE_TYPE.COLOR
 	bz.layer = $'VBoxContainer/HBoxContainer2/LayerSpinBox'.value
 	return bz

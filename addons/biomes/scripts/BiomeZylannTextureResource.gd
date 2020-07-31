@@ -1,14 +1,13 @@
 extends Resource
 
 export (String) var texture_source = "ZYLANN"
-enum TEXTURE_TYPE { HEIGHT, NORMAL, DETAIL, ALBEDO }
+enum TEXTURE_TYPE { HEIGHT, NORMAL, DETAIL, ALBEDO, COLOR }
 export (TEXTURE_TYPE) var type = TEXTURE_TYPE.HEIGHT
 export (int) var layer = 0
 
 
 func get_texture(terrain: Node):
 	var HTerrainData = terrain.HTerrainData
-	print(terrain)
 	var td = terrain.get_data()
 	match self.type:
 		TEXTURE_TYPE.HEIGHT:
@@ -19,6 +18,8 @@ func get_texture(terrain: Node):
 			return td.get_image(HTerrainData.CHANNEL_GLOBAL_ALBEDO)
 		TEXTURE_TYPE.DETAIL:
 			return td.get_image(HTerrainData.CHANNEL_DETAIL, self.layer)
+		TEXTURE_TYPE.COLOR:
+			return td.get_image(HTerrainData.CHANNEL_COLOR, self.layer)
 
 func load(obj: Resource):
 	self.type = obj.type

@@ -44,7 +44,7 @@ margin_left = 38.0
 margin_right = 116.0
 margin_bottom = 20.0
 text = "HEIGHT"
-items = [ "HEIGHT", null, false, 0, null, "NORMAL", null, false, 1, null, "DETAIL", null, false, 2, null, "ALBEDO", null, false, 3, null ]
+items = [ "HEIGHT", null, false, 0, null, "NORMAL", null, false, 1, null, "DETAIL", null, false, 2, null, "ALBEDO", null, false, 3, null, "COLOR", null, false, 4, null ]
 selected = 0
 __meta__ = {
 "_edit_use_anchors_": false
