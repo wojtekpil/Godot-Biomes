@@ -3,6 +3,7 @@ extends MultiMeshInstance
 export (Array) var sampling_array = []
 export (bool) var enable_shadows = false
 export (Image) var densitymap
+export (Image) var heightmap
 export (int) var id = -1
 export (int) var maximum_instance_count = 100
 export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
@@ -14,6 +15,9 @@ export (float) var dithering_scale = 10.0
 export (Vector3) var object_scale = Vector3(1, 1, 1)
 export (float) var object_scale_variation = 0.3
 export (float) var object_rotation_variation = 3.14 * 2.0
+
+export (Vector2) var terrain_size = Vector2(1, 1)
+export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
 var _visibility_height_range = 800
 var _semaphore: Semaphore
@@ -52,15 +56,21 @@ func _is_in_range(pixel: Vector2, size: Vector2):
 
 func _sample_by_denisty():
 	var sampled_points: Array = []
-	#temporary
-	var terrain_size = Vector2(20.0, 20.0)
 	var density_size = densitymap.get_size()
+	var heightmap_size =  heightmap.get_size() if heightmap else Vector2(0,0)
 	var texture_density_scale = density_size / terrain_size
+	var texture_heightmap_scale = heightmap_size / terrain_size
 	var cell_cords = terrain_inv_transform.xform(Vector3(chunk_position.x, 0, chunk_position.y))
 	#temporary
-	cell_cords += Vector3(terrain_size.x / 2.0, 0, terrain_size.y / 2.0)
+	cell_cords += Vector3(terrain_pivot.x, 0, terrain_pivot.y)
 	var local_density = densitymap.duplicate()
+	var local_heightmap: Image = null
 	local_density.lock()
+
+	if heightmap:
+		print("Heightmap is not null :)")
+		local_heightmap = heightmap.duplicate()
+		local_heightmap.lock()
 	for pos in sampling_array:
 		var pos_terrain: Vector2 = (
 			pos / stamp_size * chunk_size
@@ -71,8 +81,15 @@ func _sample_by_denisty():
 			continue
 		var color = local_density.get_pixelv(tex_coords)
 		if _dither_density(1.0 - color.r, pos / dithering_scale):
-			sampled_points.append(pos)
+			#get heighmap
+			color.r = 0.0
+			if heightmap != null:
+				tex_coords = (pos_terrain * texture_heightmap_scale).floor()
+				color = local_heightmap.get_pixelv(tex_coords)
+			sampled_points.append(Vector3(pos.x,color.r, pos.y))
 	local_density.unlock()
+	if heightmap:
+		local_heightmap.unlock()
 	return sampled_points
 
 
@@ -100,8 +117,8 @@ func _generate_subset(_userdata):
 			self.multimesh.instance_count = sampled_points.size()
 		self.multimesh.visible_instance_count = sampled_points.size()
 		for i in range(sampled_points.size()):
-			var pos2: Vector2 = sampled_points[i] / (stamp_size / chunk_size)
-			var position = Vector3(pos2.x, 0, pos2.y)
+			var pos2: Vector2 = Vector2(sampled_points[i].x, sampled_points[i].z)  / (stamp_size / chunk_size)
+			var position = Vector3(pos2.x, sampled_points[i].y, pos2.y)
 			var rand_hash = rng.randf_range(0.0, 1.0)
 			var rand_scale3 = (
 				Vector3(rand_hash, rand_hash, rand_hash)

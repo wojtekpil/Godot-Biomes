@@ -10,6 +10,8 @@ uniform float u_dithering_scale = 10.0;
 uniform mat4 u_terrain_inv_transform;
 uniform vec3 u_scale = vec3(1.0);
 uniform float u_scale_variaton = 0.0;
+uniform vec2 u_terrain_size = vec2(1,1);
+uniform vec2 u_terrain_pivot = vec2(0.5,0.5);
 
 
 float get_hash(vec2 c) {
@@ -84,11 +86,9 @@ void vertex()
 		vec4 obj_pos = vec4(u_chunk_pos.x + pos.x, 0, u_chunk_pos.y + pos.z, 1);
 
 		vec3 cell_coords = (u_terrain_inv_transform * obj_pos).xyz;
-		//TODO: temporary
-		//terrain transform if from the center of 20x20 plane
-		cell_coords.xz += 10f;
-		//TODO: it should be passed via uniform (terrain size?), tranform to 0..1
-		vec2 terrain_uv =  cell_coords.xz/20f;
+		cell_coords.xz += u_terrain_pivot;
+		//tranform to 0..1
+		vec2 terrain_uv =  cell_coords.xz/u_terrain_size;
 		float density = texture(u_densitymap, terrain_uv).r;
 		if (dither_object(density,data_array / u_dithering_scale))
 		{

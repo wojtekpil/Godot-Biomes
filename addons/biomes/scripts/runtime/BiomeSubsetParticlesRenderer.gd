@@ -13,7 +13,9 @@ export (Vector2) var stamp_size = Vector2(256, 256)
 export (float) var dithering_scale = 10.0
 export (Vector3) var object_scale = Vector3(1, 1, 1)
 export (float) var object_scale_variation = 0.3
-export (float) var object_rotation_variation = 3.14*2.0
+export (float) var object_rotation_variation = 3.14 * 2.0
+export (Vector2) var terrain_size = Vector2(1, 1)
+export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
 var _visibility_height_range = 800
 var _semaphore: Semaphore
@@ -99,6 +101,8 @@ func setup():
 	if gpu_compute:
 		self.process_material.set_shader_param("u_densitymap", _get_density_texture())
 		self.process_material.set_shader_param("u_dithering_scale", dithering_scale)
+		self.process_material.set_shader_param("u_terrain_size", terrain_size)
+		self.process_material.set_shader_param("u_terrain_pivot", terrain_pivot)
 
 	self.process_material.set_shader_param("u_stamp_size", stamp_size)
 	self.process_material.set_shader_param("u_chunk_size", chunk_size)
@@ -126,7 +130,6 @@ func _generate_subset(_userdata):
 		var tex: ImageTexture = Array2dToShader.generate(sampled_points)
 		self.process_material.set_shader_param("u_stamp_array", tex)
 		self.amount = sampled_points.size()
-
 
 
 func _ready():

@@ -5,6 +5,7 @@ var _sampling_provider_script = preload("res://addons/biomes/scripts/PoissonDisc
 var _biome_placement_nodes: Array = []
 var _resources: Array = []
 var _density_path: String = ""
+var _heightmap: Resource = null
 var _file_dialog: FileDialog = null
 
 const BiomePlacementNode = preload("res://addons/biomes/scripts/BiomePlacementNode.gd")
@@ -14,12 +15,14 @@ onready var _sampling_provider = _sampling_provider_script.new()
 
 const SUBSET_PORT = 0
 const DENSITY_PORT = 1
+const HEIGHTMAP_PORT = 2
 
 
 func _ready():
 	set_slot(0, true, 2, Color(0, 1, 0), false, 3, Color(0, 1, 0))
 	set_slot(1, true, 3, Color(0, 0, 1), false, 3, Color(0, 1, 0))
-	set_slot(2, false, 10, Color(0, 0, 0), false, 3, Color(0, 1, 0))
+	set_slot(2, true, 3, Color(0, 0, 1), false, 3, Color(0, 1, 0))
+	set_slot(3, false, 10, Color(0, 0, 0), false, 3, Color(0, 1, 0))
 	setup_biome()
 
 
@@ -68,17 +71,25 @@ func generate_biome():
 	var id = 0
 	for c in childs:
 		var node = ge.get_node(c['from'])
+		print("Generating %d" % c['to_port'])
 		var resource = node.generate_resource(c['from_port'])
+		print("In the middle %d" % c['to_port'])
 		if resource == null:
 			continue
+		print("After %d" % c['to_port'])
 		if c['to_port'] == SUBSET_PORT:
 			resource.id = id
 			_resources.append(resource)
 			id += 1
 		if c['to_port'] == DENSITY_PORT:
 			_density_path = resource
+		if c['to_port'] == HEIGHTMAP_PORT:
+			print("Heighmap found")
+			_heightmap = resource
+
 	print("From Renderer:")
 	print(_density_path)
+	print(_heightmap)
 	print(_resources)
 	_sampling_provider.setup_biome_placement_nodes(_resources)
 
@@ -97,4 +108,5 @@ func _on_FileDialog_file_selected(fpath):
 	var b_res = BiomeResource.new()
 	b_res.biome_subsets = _resources
 	b_res.biome_density_map_path = _density_path
+	b_res.biome_heightmap = _heightmap
 	ResourceSaver.save(fpath, b_res)

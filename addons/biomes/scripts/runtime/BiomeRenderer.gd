@@ -27,30 +27,68 @@ func bootstrap_biome():
 	_sampling_provider.setup_biome_placement_nodes(biome_placement_nodes)
 
 
-func create_chunk_renderer(chunk_position: Vector2, terrain_inv_transform: Transform):
+func create_chunk_renderer(
+	chunk_position: Vector2,
+	terrain_inv_transform: Transform,
+	terrain_size: Vector2,
+	terrain_pivot: Vector2
+):
 	var chunk = BiomeChunkRenderer.new()
 	chunk.chunk_size = chunk_size
 	chunk.chunk_position = chunk_position
 	chunk.biome_resource = _biome_resource
 	chunk.terrain_inv_transform = terrain_inv_transform
 	chunk.mesh_renderer = mesh_renderer
+	chunk.terrain_size = terrain_size
+	chunk.terrain_pivot = terrain_pivot
+	chunk.terrain = _terrain
 
 	self.add_child(chunk)
 	return chunk
 
 
+func _get_terrain_inv_transform(terrain: Node):
+	if terrain is MeshInstance:
+		return _terrain.transform.affine_inverse()
+	if "HTerrainData" in terrain:  #its Zylann's
+		var gt = terrain.get_internal_transform()
+		return gt.affine_inverse()
+
+
+func _get_terrain_size(terrain: Node):
+	if terrain is MeshInstance:
+		return _terrain.mesh.size
+	if "HTerrainData" in terrain:  #its Zylann's
+		var map_res = terrain.get_data().get_resolution()
+		var map_scale = terrain.map_scale
+		return Vector2(map_scale.x * map_res, map_scale.z * map_res)
+
+
+func _get_terrain_pivot(terrain: Node):
+	if terrain is MeshInstance:
+		return _terrain.mesh.size / 2.0
+	if "HTerrainData" in terrain:  #its Zylann's
+		return Vector2(0,0)
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var terrain_inv_transform: Transform = _terrain.transform.affine_inverse()
-	if biome == null:
-		print("No biome selected")
+	if biome == null || _terrain == null:
+		print("No biome or terrain selected")
 		return
+	var terrain_inv_transform: Transform = _get_terrain_inv_transform(_terrain)
+	var terrain_size: Vector2 = _get_terrain_size(_terrain)
+	var terrain_pivot: Vector2 = _get_terrain_pivot(_terrain)
 	bootstrap_biome()
 	_sampling_provider.connect("stamp_updated", self, "_on_stamp_updated")
-	var chunks: Vector2 = Vector2(visibility_range/chunk_size.x, visibility_range/chunk_size.y)
+	var chunks: Vector2 = Vector2(visibility_range / chunk_size.x, visibility_range / chunk_size.y)
 	for x in range(0, chunks.x + 1):
 		for y in range(0, chunks.y + 1):
-			_biomes.append(create_chunk_renderer(Vector2(x, y) * chunk_size, terrain_inv_transform))
+			_biomes.append(
+				create_chunk_renderer(
+					Vector2(x, y) * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot
+				)
+			)
 
 
 func _on_stamp_updated(_image):

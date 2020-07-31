@@ -32,21 +32,27 @@ margin_right = 169.0
 margin_bottom = 20.0
 text = "Add Texture"
 
-[node name="AddSubsetNodeButton" type="Button" parent="HBoxContainer"]
+[node name="AddZylannTextureNodeButton" type="Button" parent="HBoxContainer"]
 margin_left = 173.0
-margin_right = 257.0
+margin_right = 308.0
+margin_bottom = 20.0
+text = "Add Zylann Texture"
+
+[node name="AddSubsetNodeButton" type="Button" parent="HBoxContainer"]
+margin_left = 312.0
+margin_right = 396.0
 margin_bottom = 20.0
 text = "Add Subset"
 
 [node name="AddTransformNodeButton" type="Button" parent="HBoxContainer"]
-margin_left = 261.0
-margin_right = 366.0
+margin_left = 400.0
+margin_right = 505.0
 margin_bottom = 20.0
 text = "Add Transform"
 
 [node name="AddRendererNodeButton" type="Button" parent="HBoxContainer"]
-margin_left = 370.0
-margin_right = 469.0
+margin_left = 509.0
+margin_right = 608.0
 margin_bottom = 20.0
 text = "Add Renderer"
 
@@ -63,6 +69,7 @@ __meta__ = {
 }
 [connection signal="pressed" from="HBoxContainer/AddMeshNodeButton" to="." method="_on_AddMeshNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddTextureNodeButton" to="." method="_on_AddTextureNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddZylannTextureNodeButton" to="." method="_on_AddZylannTextureNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddSubsetNodeButton" to="." method="_on_AddSubsetNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddTransformNodeButton" to="." method="_on_AddTransformNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddRendererNodeButton" to="." method="_on_AddRendererNodeButton_pressed"]
