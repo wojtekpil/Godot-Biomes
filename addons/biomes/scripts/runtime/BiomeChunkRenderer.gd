@@ -36,8 +36,6 @@ func create_subset_renderer(biome_placement_node, sampling_provider, dithering_s
 	subset.enable_shadows = biome_placement_node.cast_shadow
 	subset.densitymap = biome_resource.get_densitymap()
 	subset.heightmap = biome_resource.get_heightmap(terrain)
-	print("Resource heightmap in theory loaded")
-	print(subset.heightmap)
 	subset.terrain_inv_transform = terrain_inv_transform
 	subset.dithering_scale = dithering_scale
 	subset.object_scale = biome_placement_node.scale
