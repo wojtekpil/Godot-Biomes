@@ -7,9 +7,12 @@ export (String) var path = null
 func get_texture(terrain: Node):
 	if path == null:
 		return null
-	var img = Image.new()
-	img.load(path)
-	return img
+	if Engine.is_editor_hint():
+		var img = Image.new()
+		img.load(path)
+		return img
+	else:
+		return load(path)
 
 func load(obj: Resource):
 	self.path = obj.path
