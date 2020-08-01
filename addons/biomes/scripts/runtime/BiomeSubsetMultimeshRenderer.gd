@@ -20,9 +20,6 @@ export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
 var _visibility_height_range = 800
-var _semaphore: Semaphore
-var _thread: Thread
-var _running = true
 
 
 func _dither_density(fade: float, pos: Vector2):
@@ -57,19 +54,15 @@ func _is_in_range(pixel: Vector2, size: Vector2):
 func _sample_by_denisty():
 	var sampled_points: Array = []
 	var density_size = densitymap.get_size()
-	var heightmap_size =  heightmap.get_size() if heightmap else Vector2(0,0)
+	var heightmap_size = heightmap.get_size() if heightmap else Vector2(0, 0)
 	var texture_density_scale = density_size / terrain_size
 	var texture_heightmap_scale = heightmap_size / terrain_size
 	var cell_cords = terrain_inv_transform.xform(Vector3(chunk_position.x, 0, chunk_position.y))
-	#temporary
-	cell_cords += Vector3(terrain_pivot.x, 0, terrain_pivot.y)
-	var local_density = densitymap.duplicate()
-	var local_heightmap: Image = null
-	local_density.lock()
 
-	if heightmap:
-		local_heightmap = heightmap.duplicate()
-		local_heightmap.lock()
+	cell_cords += Vector3(terrain_pivot.x, 0, terrain_pivot.y)
+	densitymap.lock()
+	if heightmap != null:
+		heightmap.lock()
 	for pos in sampling_array:
 		var pos_terrain: Vector2 = (
 			pos / stamp_size * chunk_size
@@ -78,17 +71,19 @@ func _sample_by_denisty():
 		var tex_coords: Vector2 = (pos_terrain * texture_density_scale).floor()
 		if not _is_in_range(tex_coords, density_size):
 			continue
-		var color = local_density.get_pixelv(tex_coords)
+
+		var color = densitymap.get_pixelv(tex_coords)
+
 		if _dither_density(1.0 - color.r, pos / dithering_scale):
 			#get heighmap
 			color.r = 0.0
 			if heightmap != null:
 				tex_coords = (pos_terrain * texture_heightmap_scale).floor()
-				color = local_heightmap.get_pixelv(tex_coords)
-			sampled_points.append(Vector3(pos.x,color.r, pos.y))
-	local_density.unlock()
-	if heightmap:
-		local_heightmap.unlock()
+				color = heightmap.get_pixelv(tex_coords)
+			sampled_points.append(Vector3(pos.x, color.r, pos.y))
+	densitymap.unlock()
+	if heightmap != null:
+		heightmap.unlock()
 	return sampled_points
 
 
@@ -100,37 +95,38 @@ func _get_density_texture():
 
 func _generate_subset(_userdata):
 	var rng = RandomNumberGenerator.new()
-	while _running:
-		_semaphore.wait()
-		if not _running:
-			return
-		var sampled_points = _sample_by_denisty()
-		if sampled_points.size() == 0:
-			self.visible = false
-			continue
-		else:
-			self.visible = true
-		self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
-		rng.seed = int(self.global_transform.origin.length())
-		if sampled_points.size() > self.multimesh.instance_count:
-			self.multimesh.instance_count = sampled_points.size()
-		self.multimesh.visible_instance_count = sampled_points.size()
-		for i in range(sampled_points.size()):
-			var pos2: Vector2 = Vector2(sampled_points[i].x, sampled_points[i].z)  / (stamp_size / chunk_size)
-			var position = Vector3(pos2.x, sampled_points[i].y, pos2.y)
-			var rand_hash = rng.randf_range(0.0, 1.0)
-			var rand_scale3 = (
-				Vector3(rand_hash, rand_hash, rand_hash)
-				* object_scale_variation
-				* object_scale
-			)
-			var rand_rotation = rand_hash * object_rotation_variation
-			var tb = Basis()
-			tb = tb.scaled(Vector3(object_scale + rand_scale3))
-			tb = tb.rotated(Vector3.UP, rand_rotation)
-			var t = Transform(tb)
-			t.origin = position
-			self.multimesh.set_instance_transform(i, t)
+
+	var sampled_points = _sample_by_denisty()
+	if sampled_points.size() == 0:
+		self.visible = false
+		return
+	else:
+		self.visible = true
+	self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
+	#TODO: setup AABB ?
+	rng.seed = int(self.global_transform.origin.length())
+	if sampled_points.size() > self.multimesh.instance_count:
+		self.multimesh.instance_count = sampled_points.size()
+	self.multimesh.visible_instance_count = sampled_points.size()
+	for i in range(sampled_points.size()):
+		var pos2: Vector2 = (
+			Vector2(sampled_points[i].x, sampled_points[i].z)
+			/ (stamp_size / chunk_size)
+		)
+		var position = Vector3(pos2.x, sampled_points[i].y, pos2.y)
+		var rand_hash = rng.randf_range(0.0, 1.0)
+		var rand_scale3 = (
+			Vector3(rand_hash, rand_hash, rand_hash)
+			* object_scale_variation
+			* object_scale
+		)
+		var rand_rotation = rand_hash * object_rotation_variation
+		var tb = Basis()
+		tb = tb.scaled(Vector3(object_scale + rand_scale3))
+		tb = tb.rotated(Vector3.UP, rand_rotation)
+		var t = Transform(tb)
+		t.origin = position
+		self.multimesh.set_instance_transform(i, t)
 
 
 func _ready():
@@ -149,16 +145,8 @@ func _ready():
 	for i in range(self.multimesh.instance_count):
 		var t = Transform(Basis(), Vector3(0, 0, 0))
 		self.multimesh.set_instance_transform(i, t)
-	_thread = Thread.new()
-	_semaphore = Semaphore.new()
-	_thread.start(self, "_generate_subset")
+	_generate_subset(null)
 
 
 func generate():
-	_semaphore.post()
-
-
-func _exit_tree():
-	_running = false
-	_semaphore.post()
-	_thread.wait_to_finish()
+	_generate_subset(null)

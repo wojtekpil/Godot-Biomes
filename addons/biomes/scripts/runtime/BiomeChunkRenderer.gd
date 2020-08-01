@@ -59,6 +59,7 @@ func generate(sampling_provider: Node):
 		biome.generate()
 		_biomes_subsets.append(biome)
 
+
 func update_chunk():
 	for x in _biomes_subsets:
 		x.generate()

@@ -99,12 +99,11 @@ func _ready():
 
 func _on_stamp_updated(_image):
 	for x in _biomes:
-		x.generate(_sampling_provider)
+		x.call_deferred("generate", _sampling_provider)
 
 
 func _on_data_region_changed(x, y, w, h, channel):
 	#we can determine which chunks to update
-	print("Region changed %d %d %d %d" % [x, y, w, h])
 	for c in _biomes:
 		if (
 			c.chunk_position.x >= x
@@ -112,4 +111,4 @@ func _on_data_region_changed(x, y, w, h, channel):
 			&& c.chunk_position.y >= y
 			&& c.chunk_position.y < y + w
 		):
-			c.update_chunk()
+			c.call_deferred("update_chunk")
