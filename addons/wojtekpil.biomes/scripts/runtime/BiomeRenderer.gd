@@ -15,7 +15,6 @@ var _chunks_free_pool: Array = []
 var _viewer_pos_world: Vector3 = Vector3(0,0,0)
 
 var BiomeChunkRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeChunkRenderer.gd")
-var BiomeDummyResource = preload("res://scripts/BiomeDummyResource.gd")
 var BiomeResource = preload("res://addons/wojtekpil.biomes/scripts/BiomeResource.gd")
 
 onready var _biome_resource = BiomeResource.new()
@@ -110,6 +109,8 @@ func _ready():
 func _process(_delta: float):
 	if not Engine.is_editor_hint():
 		update_viewer_position(null)
+	if biome == null || _terrain == null:
+		return
 	update(_viewer_pos_world)
 
 func update(viewer_pos: Vector3):

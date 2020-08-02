@@ -6,7 +6,7 @@ export (Image) var densitymap
 export (Image) var heightmap
 export (int) var id = -1
 export (int) var maximum_instance_count = 100
-export (Mesh) var mesh = preload("res://assets/meshes/spheremesh.tres")
+export (Mesh) var mesh = null
 export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)

@@ -25,6 +25,7 @@ func setup_dialogs(base_control):
 	_file_dialog.access = FileDialog.ACCESS_RESOURCES
 	_file_dialog.mode = FileDialog.MODE_OPEN_FILE
 	_file_dialog.add_filter("*.mesh; Mesh files")
+	_file_dialog.add_filter("*.tres; Mesh resource files")
 	_file_dialog.connect("file_selected", self, "_on_FileDialog_file_selected")
 	_file_dialog.hide()
 	base_control.add_child(_file_dialog)

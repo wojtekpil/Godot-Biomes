@@ -1,69 +1,39 @@
-[gd_resource type="Resource" load_steps=13 format=2]
+[gd_resource type="Resource" load_steps=9 format=2]
 
-[ext_resource path="res://addons/biomes/scripts/BiomePlacementNode.gd" type="Script" id=1]
-[ext_resource path="res://assets/tests/forest_tree_low.mesh" type="ArrayMesh" id=2]
-[ext_resource path="res://addons/biomes/scripts/BiomeResource.gd" type="Script" id=3]
-[ext_resource path="res://assets/tests/grass2.mesh" type="ArrayMesh" id=4]
-[ext_resource path="res://assets/tests/PineTree1LOD0.mesh" type="ArrayMesh" id=5]
-[ext_resource path="res://assets/tests/patch_grass_flowers.mesh" type="ArrayMesh" id=6]
-[ext_resource path="res://assets/tests/forest_tree1_dead.mesh" type="ArrayMesh" id=7]
+[ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomePlacementNode.gd" type="Script" id=1]
+[ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomeResource.gd" type="Script" id=2]
+[ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomeTextureResource.gd" type="Script" id=3]
+[ext_resource path="res://assets/meshes/sphere_mesh1.tres" type="SphereMesh" id=4]
+[ext_resource path="res://assets/meshes/sphere_mesh2.tres" type="SphereMesh" id=5]
 
 [sub_resource type="Resource" id=1]
-script = ExtResource( 1 )
-id = 0
-footprint = 15.0
-density = 0.15
-color = Color( 0.352941, 0.945098, 0.0862745, 1 )
-mesh = ExtResource( 4 )
-cast_shadow = false
-scale = Vector3( 0.4, 0.4, 0.4 )
-scale_variation = 0.1
+script = ExtResource( 3 )
+texture_source = "STANDARD"
+path = "res://assets/textures/mask.png"
 
 [sub_resource type="Resource" id=2]
 script = ExtResource( 1 )
 id = 1
-footprint = 20.0
-density = 0.05
-color = Color( 0.0470588, 0.329412, 0.215686, 1 )
-mesh = ExtResource( 6 )
+footprint = 15.0
+density = 0.2
+color = Color( 0.784314, 0.776471, 0.133333, 1 )
+mesh = ExtResource( 4 )
 cast_shadow = false
-scale = Vector3( 0.4, 0.4, 0.4 )
-scale_variation = 0.1
+scale = Vector3( 0.6, 0.6, 0.6 )
+scale_variation = 0.5
 
 [sub_resource type="Resource" id=3]
 script = ExtResource( 1 )
-id = 2
-footprint = 50.0
-density = 0.7
-color = Color( 0.0745098, 0.113725, 0.764706, 1 )
-mesh = ExtResource( 7 )
-cast_shadow = false
-scale = Vector3( 0.06, 0.06, 0.06 )
-scale_variation = 0.5
-
-[sub_resource type="Resource" id=4]
-script = ExtResource( 1 )
-id = 3
-footprint = 50.0
-density = 0.3
-color = Color( 0.819608, 0.392157, 0.141176, 1 )
-mesh = ExtResource( 2 )
-cast_shadow = false
-scale = Vector3( 0.05, 0.05, 0.05 )
-scale_variation = 0.5
-
-[sub_resource type="Resource" id=5]
-script = ExtResource( 1 )
-id = 4
-footprint = 50.0
-density = 0.3
-color = Color( 0.819608, 0.831373, 0.231373, 1 )
+id = 0
+footprint = 30.0
+density = 0.5
+color = Color( 0.282353, 0.92549, 0.168627, 1 )
 mesh = ExtResource( 5 )
-cast_shadow = false
-scale = Vector3( 0.07, 0.07, 0.07 )
+cast_shadow = true
+scale = Vector3( 1, 1, 1 )
 scale_variation = 0.5
 
 [resource]
-script = ExtResource( 3 )
-biome_subsets = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ]
-biome_density_map_path = "res://assets/textures/mask.png"
+script = ExtResource( 2 )
+biome_subsets = [ SubResource( 2 ), SubResource( 3 ) ]
+biome_density = SubResource( 1 )

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/biomes/scripts/runtime/BiomeRenderer.gd" type="Script" id=1]
+[ext_resource path="res://addons/wojtekpil.biomes/scripts/runtime/BiomeRenderer.gd" type="Script" id=1]
 [ext_resource path="res://resources/biome1.tres" type="Resource" id=2]
 
 [sub_resource type="Animation" id=1]
@@ -29,14 +29,6 @@ size = Vector2( 20, 20 )
 
 [node name="Spatial" type="Spatial"]
 
-[node name="BiomeRenderer" type="Spatial" parent="."]
-script = ExtResource( 1 )
-biome = ExtResource( 2 )
-chunk_size = Vector2( 7, 7 )
-visibility_range = 21.0
-terrain = NodePath("../Terrain")
-mesh_renderer = 0
-
 [node name="Camera_rotator" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.17821, 0, 4.95397 )
 
@@ -57,3 +49,11 @@ shadow_contact = 0.3
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.264, 0.0343606, 11.329 )
 mesh = SubResource( 3 )
 material/0 = null
+
+[node name="ProceduralBiome" type="Spatial" parent="."]
+script = ExtResource( 1 )
+biome = ExtResource( 2 )
+chunk_size = Vector2( 10, 10 )
+visibility_range = 30.0
+terrain = NodePath("../Terrain")
+mesh_renderer = 0
