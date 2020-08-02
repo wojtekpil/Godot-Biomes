@@ -1,0 +1,135 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/wojtekpil.biomes/nodes/transform/BiomeNodeTransform.gd" type="Script" id=1]
+
+[node name="BiomeNodeTransform" type="GraphNode"]
+margin_right = 191.0
+margin_bottom = 124.0
+rect_clip_content = true
+title = "Transform"
+show_close = true
+slot/0/left_enabled = false
+slot/0/left_type = 1
+slot/0/left_color = Color( 1, 0, 0, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 5
+slot/0/right_color = Color( 0, 1, 1, 1 )
+slot/1/left_enabled = false
+slot/1/left_type = 1
+slot/1/left_color = Color( 1, 0, 0, 1 )
+slot/1/right_enabled = false
+slot/1/right_type = 2
+slot/1/right_color = Color( 0, 1, 0, 1 )
+slot/2/left_enabled = false
+slot/2/left_type = 1
+slot/2/left_color = Color( 1, 0, 0, 1 )
+slot/2/right_enabled = false
+slot/2/right_type = 2
+slot/2/right_color = Color( 0, 1, 0, 1 )
+slot/3/left_enabled = false
+slot/3/left_type = 5
+slot/3/left_color = Color( 1, 0, 0, 1 )
+slot/3/right_enabled = false
+slot/3/right_type = 2
+slot/3/right_color = Color( 0, 1, 0, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 187.0
+margin_bottom = 48.0
+
+[node name="Label" type="Label" parent="HBoxContainer4"]
+margin_top = 5.0
+margin_right = 93.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Scale X"
+align = 2
+
+[node name="ScaleX" type="SpinBox" parent="HBoxContainer4"]
+margin_left = 97.0
+margin_right = 171.0
+margin_bottom = 24.0
+max_value = 1000.0
+step = 0.01
+value = 1.0
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 49.0
+margin_right = 187.0
+margin_bottom = 73.0
+
+[node name="Label" type="Label" parent="HBoxContainer7"]
+margin_top = 5.0
+margin_right = 93.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Scale Y"
+align = 2
+
+[node name="ScaleY" type="SpinBox" parent="HBoxContainer7"]
+margin_left = 97.0
+margin_right = 171.0
+margin_bottom = 24.0
+max_value = 1000.0
+step = 0.01
+value = 1.0
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 74.0
+margin_right = 187.0
+margin_bottom = 98.0
+
+[node name="Label" type="Label" parent="HBoxContainer8"]
+margin_top = 5.0
+margin_right = 93.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Scale Z"
+align = 2
+
+[node name="ScaleZ" type="SpinBox" parent="HBoxContainer8"]
+margin_left = 97.0
+margin_right = 171.0
+margin_bottom = 24.0
+max_value = 1000.0
+step = 0.01
+value = 1.0
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 99.0
+margin_right = 187.0
+margin_bottom = 123.0
+
+[node name="Label" type="Label" parent="HBoxContainer5"]
+margin_top = 5.0
+margin_right = 93.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Scale Variation"
+align = 2
+
+[node name="ScaleVar" type="SpinBox" parent="HBoxContainer5"]
+margin_left = 97.0
+margin_right = 171.0
+margin_bottom = 24.0
+max_value = 1.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+[connection signal="close_request" from="." to="." method="_on_BiomeNodeMesh_close_request"]
+[connection signal="resize_request" from="." to="." method="_on_BiomeNodeMesh_resize_request"]

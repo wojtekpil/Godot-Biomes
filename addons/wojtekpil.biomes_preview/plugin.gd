@@ -2,7 +2,7 @@ tool
 extends EditorPlugin
 
 var edited_scene: Node setget set_edited_scene
-const BiomeRenderer = preload("res://addons/biomes/scripts/runtime/BiomeRenderer.gd")
+const BiomeRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeRenderer.gd")
 
 
 func _enter_tree():
