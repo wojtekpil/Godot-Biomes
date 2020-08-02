@@ -2,6 +2,10 @@ tool
 extends EditorPlugin
 
 const MainPanel = preload("res://addons/biomes/BiomeEditor.tscn")
+const MainPanelIcon = preload("res://addons/biomes/icons/icon_main.svg")
+const BiomeRenderer = preload("res://addons/biomes/scripts/runtime/BiomeRenderer.gd")
+const BiomeRendererIcon = preload("res://addons/biomes/icons/icon.svg")
+
 
 var main_panel_instance
 
@@ -15,11 +19,15 @@ func _enter_tree():
 	get_editor_interface().get_editor_viewport().add_child(main_panel_instance)
 	# Hide the main panel. Very much required.
 	make_visible(false)
+	#Register node
+	add_custom_type("ProceduralBiome", "Spatial", BiomeRenderer, BiomeRendererIcon)
+
 
 
 func _exit_tree():
 	if main_panel_instance:
 		main_panel_instance.queue_free()
+	remove_custom_type("ProceduralBiome")
 
 
 func has_main_screen():
@@ -36,4 +44,4 @@ func get_plugin_name():
 
 
 func get_plugin_icon():
-	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
+	return MainPanelIcon
