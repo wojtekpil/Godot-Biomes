@@ -62,4 +62,5 @@ func generate(sampling_provider: Node):
 
 func update_chunk():
 	for x in _biomes_subsets:
+		x.chunk_position = chunk_position
 		x.generate()
