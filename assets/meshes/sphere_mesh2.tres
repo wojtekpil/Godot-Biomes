@@ -7,5 +7,5 @@ albedo_color = Color( 0.137255, 0.72549, 0.117647, 1 )
 material = SubResource( 1 )
 radius = 0.5
 height = 1.0
-radial_segments = 32
-rings = 16
+radial_segments = 16
+rings = 8
