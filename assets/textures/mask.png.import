@@ -2,21 +2,19 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.s3tc.stex"
-path.etc2="res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.etc2.stex"
+path="res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.stex"
 metadata={
-"imported_formats": [ "s3tc", "etc2" ],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/textures/mask.png"
-dest_files=[ "res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.s3tc.stex", "res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.etc2.stex" ]
+dest_files=[ "res://.import/mask.png-841d1242f612ab078f7631a0bd6bf15a.stex" ]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0

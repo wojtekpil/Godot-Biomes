@@ -105,6 +105,7 @@ func _ready():
 	_bootstrap_biome()
 	_setup_live_update(_terrain)
 	_sampling_provider.connect("stamp_updated", self, "_on_stamp_updated")
+	_process(0)
 
 func _process(_delta: float):
 	if not Engine.is_editor_hint():
@@ -144,6 +145,7 @@ func update(viewer_pos: Vector3):
 		cmax_x = terrain_chunks_x
 	if cmax_z > terrain_chunks_z:
 		cmax_z = terrain_chunks_z
+
 
 	for cz in range(cmin_z, cmax_z + 1):
 		for cx in range(cmin_x, cmax_x + 1):

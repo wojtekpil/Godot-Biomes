@@ -34,6 +34,10 @@ func _exit_tree():
 func _preview_texture(image_path):
 	var texture = load(image_path)
 	$'VBoxContainer/Panel/TexturePreview'.texture = texture
+	if texture.get_data().is_compressed():
+		$'VBoxContainer/InfoLabel'.text = "Image is imported with \n\rVideo RAM compression. \n\rIt wont work on export!"
+	else:
+		$'VBoxContainer/InfoLabel'.text = ""
 
 
 func _on_EditorResourcePreview_preview_loaded(path, texture, userdata):

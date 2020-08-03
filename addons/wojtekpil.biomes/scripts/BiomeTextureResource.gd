@@ -12,7 +12,7 @@ func get_texture(terrain: Node):
 		img.load(path)
 		return img
 	else:
-		return load(path)
+		return load(path).get_data()
 
 func load(obj: Resource):
 	self.path = obj.path

@@ -6,7 +6,7 @@
 
 [node name="BiomeNodeMesh" type="GraphNode"]
 margin_right = 186.0
-margin_bottom = 127.0
+margin_bottom = 140.0
 rect_clip_content = true
 title = "Texture"
 show_close = true
@@ -25,7 +25,7 @@ __meta__ = {
 margin_left = 16.0
 margin_top = 24.0
 margin_right = 170.0
-margin_bottom = 116.0
+margin_bottom = 134.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -65,6 +65,13 @@ expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="InfoLabel" type="Label" parent="VBoxContainer"]
+margin_top = 96.0
+margin_right = 154.0
+margin_bottom = 110.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+align = 1
 [connection signal="close_request" from="." to="." method="_on_BiomeNodeMesh_close_request"]
 [connection signal="resize_request" from="." to="." method="_on_BiomeNodeMesh_resize_request"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SelectButton" to="." method="_on_SelectButton_pressed"]
