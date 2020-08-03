@@ -25,3 +25,17 @@ func generate_resource(_output_slot: int):
 			bz.type = bz.TEXTURE_TYPE.SPLAT
 	bz.layer = $'VBoxContainer/HBoxContainer2/LayerSpinBox'.value
 	return bz
+
+
+func restore_custom_data(data := {}):
+	if "type" in data:
+		$'VBoxContainer/HBoxContainer/TypeOptionButton'.selected = data['type']
+	if "layer" in data:
+		$'VBoxContainer/HBoxContainer2/LayerSpinBox'.value = data['layer']
+
+
+func export_custom_data():
+	return {
+		'type': $'VBoxContainer/HBoxContainer/TypeOptionButton'.selected,
+		'layer': $'VBoxContainer/HBoxContainer2/LayerSpinBox'.value
+	}

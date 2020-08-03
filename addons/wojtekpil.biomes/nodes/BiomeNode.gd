@@ -10,6 +10,14 @@ func generate_resource(_output_slot: int):
 	return null
 
 
+func restore_custom_data(data := {}):
+	pass
+
+
+func export_custom_data():
+	return null
+
+
 func _on_BiomeNodeMesh_close_request():
 	queue_free()
 

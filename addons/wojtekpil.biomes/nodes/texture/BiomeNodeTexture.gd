@@ -47,10 +47,14 @@ func _on_EditorResourcePreview_preview_loaded(path, texture, userdata):
 		print("No preview available for ", path)
 
 
-func _on_FileDialog_file_selected(fpath):
+func _load_image(fpath):
 	$'VBoxContainer/HBoxContainer/PathLineEdit'.text = fpath
 	_preview_texture(fpath)
 	_imagepath = fpath
+
+
+func _on_FileDialog_file_selected(fpath):
+	_load_image(fpath)
 
 
 func _on_SelectButton_pressed():
@@ -61,3 +65,12 @@ func generate_resource(output_slot: int):
 	var st = BiomeTexture.new()
 	st.path = _imagepath
 	return st
+
+
+func restore_custom_data(data := {}):
+	if "imagefile" in data:
+		_load_image(data['imagefile'])
+
+
+func export_custom_data():
+	return {'imagefile': _imagepath}

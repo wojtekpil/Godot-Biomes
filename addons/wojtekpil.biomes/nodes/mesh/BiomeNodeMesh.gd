@@ -52,10 +52,14 @@ func _on_EditorResourcePreview_preview_loaded(path, texture, userdata):
 		print("No preview available for ", path)
 
 
-func _on_FileDialog_file_selected(fpath):
+func _load_mesh(fpath):
 	$'VBoxContainer/HBoxContainer/PathLineEdit'.text = fpath
 	_preview_mesh(fpath)
 	_meshfile = fpath
+
+
+func _on_FileDialog_file_selected(fpath):
+	_load_mesh(fpath)
 
 
 func _on_SelectButton_pressed():
@@ -71,3 +75,12 @@ func generate_resource(output_slot: int):
 
 	resource.mesh = load(_meshfile)
 	return resource
+
+
+func restore_custom_data(data := {}):
+	if "meshfile" in data:
+		_load_mesh(data['meshfile'])
+
+
+func export_custom_data():
+	return {'meshfile': _meshfile}

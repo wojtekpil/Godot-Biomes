@@ -6,6 +6,7 @@ const LOD1_MESH_PORT = 1
 const LOD2_MESH_PORT = 2
 const TRANSFORM_PORT = 3
 
+
 func _ready():
 	set_slot(0, true, 1, Color(1, 0, 0), true, 2, Color(0, 1, 0))
 	set_slot(1, true, 1, Color(1, 0, 0), false, 2, Color(0, 1, 0))
@@ -14,6 +15,7 @@ func _ready():
 	set_slot(4, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
 	set_slot(5, true, 5, Color(0, 1, 1), false, 2, Color(0, 1, 0))
 	set_slot(6, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
+
 
 func generate_resource(output_slot: int):
 	var ge: GraphEdit = get_parent()
@@ -35,19 +37,48 @@ func generate_resource(output_slot: int):
 			resource = node.generate_resource(c['from_port'])
 		if c['to_port'] == TRANSFORM_PORT:
 			transform_mesh = node.generate_resource(c['from_port'])
-	
+
 	if resource == null:
 		return null
 
 	if transform_mesh == null:
-		resource.scale = Vector3(1,1,1)
+		resource.scale = Vector3(1, 1, 1)
 		resource.scale_variation = 0
 	else:
 		resource.scale = transform_mesh.scale
 		resource.scale_variation = transform_mesh.scale_variation
-	
+
 	resource.density = $'HBoxContainer5/Frequency'.value
 	resource.footprint = $'HBoxContainer4/Footprint'.value
 	resource.color = $'HBoxContainer6/DebColor'.color
 	resource.cast_shadow = $'HBoxContainer7/ShadowsButton'.pressed
 	return resource
+
+
+func restore_custom_data(data := {}):
+	if "density" in data:
+		$'HBoxContainer5/Frequency'.value = data['density']
+	if "footprint" in data:
+		$'HBoxContainer4/Footprint'.value = data['footprint']
+	if "color_r" in data && 'color_g' in data && 'color_b' in data && 'color_a' in data:
+		var color = Color(
+			float(data['color_r']),
+			float(data['color_g']),
+			float(data['color_b']),
+			float(data['color_a'])
+		)
+		$'HBoxContainer6/DebColor'.color = color
+	if "cast_shadow" in data:
+		$'HBoxContainer7/ShadowsButton'.pressed = data['cast_shadow']
+
+
+func export_custom_data():
+	return {
+		'density': $'HBoxContainer5/Frequency'.value,
+		'footprint': $'HBoxContainer4/Footprint'.value,
+		'color_r': $'HBoxContainer6/DebColor'.color.r,
+		'color_g': $'HBoxContainer6/DebColor'.color.g,
+		'color_b': $'HBoxContainer6/DebColor'.color.b,
+		'color_a': $'HBoxContainer6/DebColor'.color.a,
+		'cast_shadow': $'HBoxContainer7/ShadowsButton'.pressed
+	}

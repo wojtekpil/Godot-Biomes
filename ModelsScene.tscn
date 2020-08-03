@@ -56,3 +56,4 @@ biome = ExtResource( 2 )
 chunk_size = Vector2( 10, 10 )
 visibility_range = 30.0
 terrain = NodePath("../Terrain")
+mesh_renderer = 0

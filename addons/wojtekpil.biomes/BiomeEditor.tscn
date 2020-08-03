@@ -56,6 +56,24 @@ margin_right = 608.0
 margin_bottom = 20.0
 text = "Add Renderer"
 
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+margin_left = 612.0
+margin_right = 849.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="SaveButton" type="Button" parent="HBoxContainer"]
+margin_left = 853.0
+margin_right = 936.0
+margin_bottom = 20.0
+text = "Save Graph"
+
+[node name="LoadButton" type="Button" parent="HBoxContainer"]
+margin_left = 940.0
+margin_right = 1024.0
+margin_bottom = 20.0
+text = "Load Graph"
+
 [node name="BiomeGraphEdit" type="GraphEdit" parent="."]
 margin_top = 24.0
 margin_right = 1024.0
@@ -73,4 +91,6 @@ __meta__ = {
 [connection signal="pressed" from="HBoxContainer/AddSubsetNodeButton" to="." method="_on_AddSubsetNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddTransformNodeButton" to="." method="_on_AddTransformNodeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddRendererNodeButton" to="." method="_on_AddRendererNodeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/SaveButton" to="." method="_on_SaveButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/LoadButton" to="." method="_on_LoadButton_pressed"]
 [connection signal="connection_request" from="BiomeGraphEdit" to="." method="_on_BiomeGraphEdit_connection_request"]
