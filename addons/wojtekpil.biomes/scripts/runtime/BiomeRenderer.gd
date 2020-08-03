@@ -51,6 +51,7 @@ func _create_chunk_renderer(
 	chunk.terrain_pivot = terrain_pivot
 	chunk.terrain = _terrain
 	if is_new:
+		chunk.call_deferred("generate", _sampling_provider)
 		self.add_child(chunk)
 	else:
 		chunk.update_chunk()
