@@ -1,4 +1,4 @@
-extends Spatial
+extends VisibilityNotifier
 
 export (Resource) var biome_resource = null
 export (Vector2) var chunk_size = Vector2(10, 10)
@@ -7,12 +7,14 @@ export (Transform) var terrain_inv_transform
 export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 export (int) var lod = 0
+export (bool) var enabled = true
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 
 var terrain: Node = null
 
+var _visibility_height_range = 800
 var _biomes_subsets = []
 const BiomeSubsetParticlesRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetParticlesRenderer.gd")
 const BiomeSubsetMultimeshRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetMultimeshRenderer.gd")
@@ -60,8 +62,16 @@ func create_subset_renderer(biome_placement_node, dithering_scale):
 
 	return subset
 
+func _update_aabb():
+	self.aabb = AABB(
+		Vector3(chunk_position.x, -_visibility_height_range / 2, chunk_position.y),
+		Vector3(chunk_size.x, _visibility_height_range, chunk_size.y)
+	)
 
 func generate():
+	_update_aabb()
+	connect("camera_entered", self, "_camera_entered")
+	connect("camera_exited", self, "_camera_exited")
 	var biome: Object = null
 	biome_resource.clear_cache()
 	var biome_data: Array = biome_resource.get_biome_subsets()
@@ -74,6 +84,16 @@ func generate():
 
 
 func update_chunk():
+
+	_update_aabb()
 	for x in _biomes_subsets:
 		x.chunk_position = chunk_position
 		x.generate()
+
+
+func _camera_entered(_camera: Camera):
+	self.visible = enabled
+
+
+func _camera_exited(_camera: Camera):
+	self.visible = false

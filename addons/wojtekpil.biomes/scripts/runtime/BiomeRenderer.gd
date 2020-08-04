@@ -165,6 +165,7 @@ func update(viewer_pos: Vector3):
 			var chunk = _create_chunk_renderer(
 				cpos2d * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot, lod
 			)
+			chunk.enabled = true
 			chunk.visible = true
 			_biomes[cpos2d] = chunk
 
@@ -177,7 +178,7 @@ func update(viewer_pos: Vector3):
 	for cpos2d in to_recycle:
 		var chunk = _biomes[cpos2d]
 		_biomes.erase(cpos2d)
-		chunk.visible = false
+		chunk.enabled = false
 		_chunks_free_pool.append(chunk)
 
 
