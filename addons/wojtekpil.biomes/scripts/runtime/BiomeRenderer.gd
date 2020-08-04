@@ -10,7 +10,6 @@ enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 
 var _biomes: Dictionary = {}
-var _sampling_provider_script = preload("res://addons/wojtekpil.biomes/scripts/PoissonDisc.gd")
 var _chunks_free_pool: Array = []
 var _viewer_pos_world: Vector3 = Vector3(0,0,0)
 
@@ -18,14 +17,11 @@ var BiomeChunkRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/
 var BiomeResource = preload("res://addons/wojtekpil.biomes/scripts/BiomeResource.gd")
 
 onready var _biome_resource = BiomeResource.new()
-onready var _sampling_provider = _sampling_provider_script.new()
 onready var _terrain = get_node(terrain)
 
 
 func _bootstrap_biome():
 	_biome_resource.load(biome)
-	var biome_placement_nodes = _biome_resource.get_biome_subsets()
-	_sampling_provider.setup_biome_placement_nodes(biome_placement_nodes)
 
 
 func _create_chunk_renderer(
@@ -51,7 +47,7 @@ func _create_chunk_renderer(
 	chunk.terrain_pivot = terrain_pivot
 	chunk.terrain = _terrain
 	if is_new:
-		chunk.call_deferred("generate", _sampling_provider)
+		chunk.call_deferred("generate")
 		self.add_child(chunk)
 	else:
 		chunk.update_chunk()
@@ -105,7 +101,6 @@ func _ready():
 		return
 	_bootstrap_biome()
 	_setup_live_update(_terrain)
-	_sampling_provider.connect("stamp_updated", self, "_on_stamp_updated")
 	_process(0)
 
 func _process(_delta: float):
@@ -170,12 +165,6 @@ func update(viewer_pos: Vector3):
 		_biomes.erase(cpos2d)
 		chunk.visible = false
 		_chunks_free_pool.append(chunk)
-
-
-func _on_stamp_updated(_image):
-	for bi in _biomes:
-		var x = _biomes[bi]
-		x.call_deferred("generate", _sampling_provider)
 
 
 func _on_data_region_changed(x, y, w, h, channel):

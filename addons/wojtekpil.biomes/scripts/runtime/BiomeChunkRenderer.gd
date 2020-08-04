@@ -17,7 +17,7 @@ const BiomeSubsetParticlesRenderer = preload("res://addons/wojtekpil.biomes/scri
 const BiomeSubsetMultimeshRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetMultimeshRenderer.gd")
 
 
-func create_subset_renderer(biome_placement_node, sampling_provider, dithering_scale):
+func create_subset_renderer(biome_placement_node, dithering_scale):
 	var subset = null
 	match mesh_renderer:
 		MESH_RENDER.Particles:
@@ -32,7 +32,7 @@ func create_subset_renderer(biome_placement_node, sampling_provider, dithering_s
 	subset.mesh = biome_placement_node.mesh
 	subset.chunk_size = chunk_size
 	subset.chunk_position = chunk_position
-	subset.stamp_size = sampling_provider.stamp_size
+	subset.stamp_size = biome_resource.biome_stamp_size
 	subset.enable_shadows = biome_placement_node.cast_shadow
 	subset.densitymap = biome_resource.get_densitymap(terrain)
 	subset.heightmap = biome_resource.get_heightmap(terrain)
@@ -48,14 +48,14 @@ func create_subset_renderer(biome_placement_node, sampling_provider, dithering_s
 	return subset
 
 
-func generate(sampling_provider: Node):
+func generate():
 	var biome: Object = null
 	biome_resource.clear_cache()
 	var biome_data: Array = biome_resource.get_biome_subsets()
 	var dithering_scale = biome_resource.get_min_footprint()
 	for x in biome_data:
-		biome = create_subset_renderer(x, sampling_provider, dithering_scale)
-		biome.sampling_array = sampling_provider.query_points_by_id(x.id)
+		biome = create_subset_renderer(x, dithering_scale)
+		biome.sampling_array = biome_resource.biome_stamp.get(x.id, [])
 		biome.generate()
 		_biomes_subsets.append(biome)
 

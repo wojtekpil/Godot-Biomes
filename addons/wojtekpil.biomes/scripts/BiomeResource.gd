@@ -3,6 +3,8 @@ extends Resource
 export (Array) var biome_subsets = []
 export (Resource) var biome_density = null
 export (Resource) var biome_heightmap = null
+export (Dictionary) var biome_stamp = {}
+export (Vector2) var biome_stamp_size = Vector2(0,0)
 
 var _biome_density_map: Image = null
 var _biome_height_map: Image = null
@@ -56,6 +58,8 @@ func load(data: Resource):
 	self.biome_subsets = data.biome_subsets
 	self.biome_density = data.biome_density
 	self.biome_heightmap = data.biome_heightmap
+	self.biome_stamp = data.biome_stamp
+	self.biome_stamp_size = data.biome_stamp_size
 
 
 func clear_cache():

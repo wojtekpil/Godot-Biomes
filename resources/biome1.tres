@@ -1,9 +1,9 @@
 [gd_resource type="Resource" load_steps=9 format=2]
 
-[ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomePlacementNode.gd" type="Script" id=1]
+[ext_resource path="res://assets/meshes/sphere_mesh1.tres" type="SphereMesh" id=1]
 [ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomeResource.gd" type="Script" id=2]
 [ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomeTextureResource.gd" type="Script" id=3]
-[ext_resource path="res://assets/meshes/sphere_mesh1.tres" type="SphereMesh" id=4]
+[ext_resource path="res://addons/wojtekpil.biomes/scripts/BiomePlacementNode.gd" type="Script" id=4]
 [ext_resource path="res://assets/meshes/sphere_mesh2.tres" type="SphereMesh" id=5]
 
 [sub_resource type="Resource" id=1]
@@ -12,19 +12,19 @@ texture_source = "STANDARD"
 path = "res://assets/textures/mask.png"
 
 [sub_resource type="Resource" id=2]
-script = ExtResource( 1 )
-id = 1
+script = ExtResource( 4 )
+id = 0
 footprint = 15.0
 density = 0.2
 color = Color( 0.784314, 0.776471, 0.133333, 1 )
-mesh = ExtResource( 4 )
+mesh = ExtResource( 1 )
 cast_shadow = false
 scale = Vector3( 0.6, 0.6, 0.6 )
 scale_variation = 0.5
 
 [sub_resource type="Resource" id=3]
-script = ExtResource( 1 )
-id = 0
+script = ExtResource( 4 )
+id = 1
 footprint = 30.0
 density = 0.5
 color = Color( 0.282353, 0.92549, 0.168627, 1 )
@@ -37,3 +37,8 @@ scale_variation = 0.5
 script = ExtResource( 2 )
 biome_subsets = [ SubResource( 2 ), SubResource( 3 ) ]
 biome_density = SubResource( 1 )
+biome_stamp = {
+0: [ Vector2( 81.4337, 89.1556 ), Vector2( 56.5542, 83.9809 ), Vector2( 49.9342, 111.476 ), Vector2( 38.9408, 50.6813 ), Vector2( 37.8399, 16.7367 ), Vector2( 65.8743, 131.403 ), Vector2( 45.381, 141.439 ), Vector2( 29.7905, 123.104 ), Vector2( 46.8748, 159.781 ), Vector2( 20.4053, 174.079 ), Vector2( 98.606, 33.4669 ), Vector2( 69.6061, 16.6798 ), Vector2( 54.852, 32.9434 ), Vector2( 78.2683, 55.9898 ), Vector2( 53.2197, 2.40615 ), Vector2( 131.061, 121.16 ), Vector2( 166.327, 94.3952 ), Vector2( 127.408, 7.75004 ), Vector2( 164.57, 25.4014 ), Vector2( 160.807, 0.935087 ), Vector2( 182.196, 35.4516 ), Vector2( 189.785, 55.107 ), Vector2( 223.715, 76.5599 ), Vector2( 230.134, 109.68 ), Vector2( 231.456, 91.0482 ), Vector2( 129.33, 154.27 ), Vector2( 148.027, 167.9 ), Vector2( 125.464, 171.863 ), Vector2( 108.797, 183.734 ), Vector2( 80.1653, 175.431 ), Vector2( 5.11795, 179.693 ), Vector2( 6.17158, 213.861 ), Vector2( 55.933, 239.601 ), Vector2( 14.466, 232.286 ), Vector2( 81.5834, 227.408 ), Vector2( 104.712, 246.168 ), Vector2( 153.096, 203.178 ), Vector2( 168.238, 134.927 ), Vector2( 190.398, 129.234 ), Vector2( 206.22, 176.98 ), Vector2( 182.212, 143.066 ), Vector2( 240.699, 45.4226 ), Vector2( 223.067, 225.798 ), Vector2( 205.263, 214.798 ), Vector2( 230.658, 255.101 ), Vector2( 62.4866, 177.023 ), Vector2( 243.723, 161.335 ), Vector2( 64.9584, 71.2254 ), Vector2( 93.3879, 98.2838 ), Vector2( 107.451, 78.9256 ), Vector2( 56.3858, 57.8609 ), Vector2( 65.8418, 96.6014 ), Vector2( 33.8547, 105.488 ), Vector2( 78.213, 111.065 ), Vector2( 17.8905, 54.1878 ), Vector2( 27.5007, 31.4178 ), Vector2( 71.9907, 156.836 ), Vector2( 76.4718, 142.447 ), Vector2( 15.3454, 118.888 ), Vector2( 1.52009, 129.78 ), Vector2( 41.3335, 175.422 ), Vector2( 113.005, 12.6755 ), Vector2( 70.9094, 36.2376 ), Vector2( 82.8453, 2.71418 ), Vector2( 85.6812, 22.5676 ), Vector2( 85.6097, 71.8427 ), Vector2( 157.032, 106.292 ), Vector2( 109.888, 108.99 ), Vector2( 146.053, 146.357 ), Vector2( 166.829, 77.7912 ), Vector2( 181.614, 99.7895 ), Vector2( 136.571, 23.198 ), Vector2( 146.247, 7.79832 ), Vector2( 146.417, 35.6614 ), Vector2( 174.95, 6.55497 ), Vector2( 175.362, 49.9964 ), Vector2( 202.416, 37.6873 ), Vector2( 188.041, 21.1604 ), Vector2( 210.443, 54.2911 ), Vector2( 253.212, 76.8484 ), Vector2( 213.807, 117.041 ), Vector2( 239.37, 66.7338 ), Vector2( 227.193, 52.4039 ), Vector2( 120.665, 137.135 ), Vector2( 104.483, 152.56 ), Vector2( 140.641, 184.215 ), Vector2( 126.5, 191.284 ), Vector2( 122.538, 207.898 ), Vector2( 102.637, 169.526 ), Vector2( 103.073, 216.383 ), Vector2( 118.662, 223.212 ), Vector2( 135.836, 222.447 ), Vector2( 16.2686, 199.018 ), Vector2( 23.7004, 218.696 ), Vector2( 16.3968, 247.312 ), Vector2( 65.5684, 212.783 ), Vector2( 81.1798, 245.38 ), Vector2( 59.0676, 254.716 ), Vector2( 31.7725, 244.036 ), Vector2( 46.3693, 222.189 ), Vector2( 159.736, 218.341 ), Vector2( 166.28, 118.714 ), Vector2( 146.373, 123.378 ), Vector2( 221.66, 180.671 ), Vector2( 217.05, 203.398 ), Vector2( 201.014, 200.059 ), Vector2( 242.414, 184.375 ), Vector2( 235.268, 234.706 ), Vector2( 7.201, 77.406 ), Vector2( 16.2533, 103.359 ), Vector2( 0.488544, 105.506 ), Vector2( 183.376, 76.1606 ), Vector2( 182.636, 255.66 ), Vector2( 232.966, 139.103 ), Vector2( 217.57, 132.52 ), Vector2( 179.743, 228.731 ), Vector2( 88.2982, 157.874 ), Vector2( 253.847, 25.6846 ), Vector2( 25.0157, 3.5319 ), Vector2( 255.401, 146.746 ), Vector2( 252.833, 97.9138 ) ],
+1: [ Vector2( 118.962, 46.1798 ), Vector2( 96.544, 127.154 ), Vector2( 30.8037, 79.6151 ), Vector2( 0.479904, 28.8319 ), Vector2( 131.347, 91.8492 ), Vector2( 20.2301, 151.568 ), Vector2( 144.611, 64.5556 ), Vector2( 86.1596, 198.199 ), Vector2( 43.9463, 199.736 ), Vector2( 158.532, 240.99 ), Vector2( 177.907, 200.836 ), Vector2( 215.631, 156.495 ), Vector2( 173.26, 163.918 ), Vector2( 202.943, 239.62 ), Vector2( 254.288, 254.931 ), Vector2( 127.595, 254.187 ), Vector2( 224.348, 27.9487 ), Vector2( 206.916, 2.08714 ), Vector2( 248.667, 0.504738 ), Vector2( 203.392, 89.9321 ), Vector2( 252.552, 123.01 ), Vector2( 240.194, 210.432 ) ]
+}
+biome_stamp_size = Vector2( 256, 256 )

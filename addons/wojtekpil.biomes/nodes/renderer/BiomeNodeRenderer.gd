@@ -7,6 +7,8 @@ var _resources: Array = []
 var _density: Resource = null
 var _heightmap: Resource = null
 var _file_dialog: FileDialog = null
+var _stamp_data: Dictionary = {}
+var _stamp_size: Vector2 = Vector2(0,0)
 
 const BiomePlacementNode = preload("res://addons/wojtekpil.biomes/scripts/BiomePlacementNode.gd")
 const BiomeResource = preload("res://addons/wojtekpil.biomes/scripts/BiomeResource.gd")
@@ -52,7 +54,8 @@ func setup_biome():
 
 
 func _on_stamp_updated(image: Image):
-	var points_one: Array = _sampling_provider.query_points_by_id(1)
+	_stamp_data = _sampling_provider.generate_stamp_data()
+	_stamp_size = _sampling_provider.stamp_size
 	apply_texture(image)
 
 
@@ -86,11 +89,11 @@ func generate_biome():
 		if c['to_port'] == HEIGHTMAP_PORT:
 			print("Heighmap found")
 			_heightmap = resource
-
 	print("From Renderer:")
 	print(_density)
 	print(_heightmap)
 	print(_resources)
+	print("Stamp size %d " % _stamp_data.size())
 	_sampling_provider.setup_biome_placement_nodes(_resources)
 
 
@@ -109,4 +112,6 @@ func _on_FileDialog_file_selected(fpath):
 	b_res.biome_subsets = _resources
 	b_res.biome_density = _density
 	b_res.biome_heightmap = _heightmap
+	b_res.biome_stamp = _stamp_data
+	b_res.biome_stamp_size = _stamp_size
 	ResourceSaver.save(fpath, b_res)

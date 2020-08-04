@@ -284,6 +284,14 @@ func query_points_by_id(id: int):
 	return id_arr
 
 
+func generate_stamp_data():
+	var stamp: Dictionary = {}
+	for bi in _biome_placement_nodes:
+		var id = bi.id
+		stamp[id] = query_points_by_id(id)
+	return stamp
+
+
 func _init():
 	_thread = Thread.new()
 	_semaphore = Semaphore.new()
