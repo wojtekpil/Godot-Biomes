@@ -4,6 +4,7 @@ extends Spatial
 export (Resource) var biome = null
 export (Vector2) var chunk_size = Vector2(32, 32)
 export (float) var visibility_range = 10
+export (float) var lod0_range = 5
 export (NodePath) var terrain = null
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
@@ -28,7 +29,8 @@ func _create_chunk_renderer(
 	chunk_position: Vector2,
 	terrain_inv_transform: Transform,
 	terrain_size: Vector2,
-	terrain_pivot: Vector2
+	terrain_pivot: Vector2,
+	lod: int
 ):
 	var chunk = null
 	var is_new = true
@@ -110,6 +112,14 @@ func _process(_delta: float):
 		return
 	update(_viewer_pos_world)
 
+
+func _calculate_lod(cr0, viewer_cx, viewer_cz, chunk_pos):
+	if abs(chunk_pos.x - viewer_cx) > cr0 || abs(chunk_pos.y - viewer_cz) > cr0:
+		return  1
+	else:
+		return 0
+
+
 func update(viewer_pos: Vector3):
 	var terrain_inv_transform: Transform = _get_terrain_inv_transform(_terrain)
 	var terrain_size: Vector2 = _get_terrain_size(_terrain)
@@ -124,6 +134,8 @@ func update(viewer_pos: Vector3):
 	var viewer_cz = local_viewer_pos.z / chunk_size.y
 
 	var cr = int(visibility_range) / chunk_size.x + 1
+
+	var cr0 = int(lod0_range) / chunk_size.x + 1
 
 	var cmin_x = viewer_cx - cr
 	var cmin_z = viewer_cz - cr
@@ -146,10 +158,12 @@ func update(viewer_pos: Vector3):
 	for cz in range(cmin_z, cmax_z + 1):
 		for cx in range(cmin_x, cmax_x + 1):
 			var cpos2d = Vector2(cx, cz)
+			var lod = _calculate_lod(cr0, viewer_cx, viewer_cz, cpos2d)
 			if _biomes.has(cpos2d):
+				_biomes.get(cpos2d).update_lod(lod)
 				continue
 			var chunk = _create_chunk_renderer(
-				cpos2d * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot
+				cpos2d * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot, lod
 			)
 			chunk.visible = true
 			_biomes[cpos2d] = chunk

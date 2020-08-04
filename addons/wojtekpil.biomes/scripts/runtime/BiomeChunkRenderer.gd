@@ -6,6 +6,7 @@ export (Vector2) var chunk_position = Vector2(0, 0)
 export (Transform) var terrain_inv_transform
 export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
+export (int) var lod = 0
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
@@ -16,6 +17,16 @@ var _biomes_subsets = []
 const BiomeSubsetParticlesRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetParticlesRenderer.gd")
 const BiomeSubsetMultimeshRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetMultimeshRenderer.gd")
 
+
+func _update_mesh_subsets(new_lod: int):
+	for x in _biomes_subsets:
+		x.update_lod(new_lod)
+
+func update_lod(new_lod: int):
+	if new_lod == lod:
+		return
+	_update_mesh_subsets(new_lod)
+	lod = new_lod
 
 func create_subset_renderer(biome_placement_node, dithering_scale):
 	var subset = null
@@ -30,6 +41,8 @@ func create_subset_renderer(biome_placement_node, dithering_scale):
 
 	subset.id = biome_placement_node.id
 	subset.mesh = biome_placement_node.mesh
+	subset.mesh1 = biome_placement_node.mesh1
+	subset.lod = lod
 	subset.chunk_size = chunk_size
 	subset.chunk_position = chunk_position
 	subset.stamp_size = biome_resource.biome_stamp_size

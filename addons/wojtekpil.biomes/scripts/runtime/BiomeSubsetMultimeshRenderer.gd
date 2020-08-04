@@ -7,6 +7,8 @@ export (Image) var heightmap
 export (int) var id = -1
 export (int) var maximum_instance_count = 100
 export (Mesh) var mesh = null
+export (Mesh) var mesh1 = null
+export (int) var lod = 0
 export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)
@@ -129,6 +131,15 @@ func _generate_subset(_userdata):
 		self.multimesh.set_instance_transform(i, t)
 
 
+func update_lod(new_lod: int):
+	self.lod = new_lod
+	match self.lod:
+		0:
+			self.multimesh.mesh = mesh
+		1:
+			self.multimesh.mesh = mesh1
+
+
 func _ready():
 	self.visible = false
 	self.multimesh = MultiMesh.new()
@@ -137,7 +148,7 @@ func _ready():
 	self.multimesh.custom_data_format = MultiMesh.CUSTOM_DATA_NONE
 	self.multimesh.instance_count = maximum_instance_count
 	self.multimesh.visible_instance_count = 0
-	self.multimesh.mesh = mesh
+	update_lod(self.lod)
 	if enable_shadows:
 		self.cast_shadow = SHADOW_CASTING_SETTING_ON
 	else:

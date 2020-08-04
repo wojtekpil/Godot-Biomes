@@ -13,13 +13,16 @@ func _ready():
 	set_slot(2, true, 1, Color(1, 0, 0), false, 2, Color(0, 1, 0))
 	set_slot(3, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
 	set_slot(4, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
-	set_slot(5, true, 5, Color(0, 1, 1), false, 2, Color(0, 1, 0))
-	set_slot(6, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
+	set_slot(5, false, 5, Color(0, 1, 1), false, 2, Color(0, 1, 0))
+	set_slot(6, true, 5, Color(0, 1, 1), false, 2, Color(0, 1, 0))
+	set_slot(7, false, 5, Color(1, 0, 0), false, 2, Color(0, 1, 0))
 
 
 func generate_resource(output_slot: int):
 	var ge: GraphEdit = get_parent()
 	var resource = null
+	var mesh1 = null
+	var mesh2 = null
 	var transform_mesh = null
 	#only one output
 	var childs = []
@@ -35,11 +38,20 @@ func generate_resource(output_slot: int):
 		var node = ge.get_node(c['from'])
 		if c['to_port'] == LOD0_MESH_PORT:
 			resource = node.generate_resource(c['from_port'])
+		if c['to_port'] == LOD1_MESH_PORT:
+			mesh1 = node.generate_resource(c['from_port'])
+		if c['to_port'] == LOD2_MESH_PORT:
+			mesh2 = node.generate_resource(c['from_port'])
 		if c['to_port'] == TRANSFORM_PORT:
 			transform_mesh = node.generate_resource(c['from_port'])
 
 	if resource == null:
 		return null
+
+	if mesh1 != null:
+		resource.mesh1 = mesh1.mesh
+	if mesh2 != null:
+		resource.mesh2 = mesh2.mesh
 
 	if transform_mesh == null:
 		resource.scale = Vector3(1, 1, 1)
