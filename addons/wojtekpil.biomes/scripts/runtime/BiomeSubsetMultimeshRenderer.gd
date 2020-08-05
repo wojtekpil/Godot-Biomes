@@ -1,14 +1,16 @@
 extends MultiMeshInstance
 
 export (Array) var sampling_array = []
-export (bool) var enable_shadows = false
+enum SHADOW_CASTING {ON, OFF, ONLY_SHADOW}
+export (SHADOW_CASTING) var shadows_type = SHADOW_CASTING.OFF
 export (Image) var densitymap
 export (Image) var heightmap
 export (int) var id = -1
 export (int) var maximum_instance_count = 100
 export (Mesh) var mesh = null
 export (Mesh) var mesh1 = null
-export (int) var lod = 0
+export (Mesh) var mesh2 = null
+export (int) var lod = 2
 export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
 export (Vector2) var chunk_position = Vector2(0, 0)
@@ -21,7 +23,8 @@ export (float) var object_rotation_variation = 3.14 * 2.0
 export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
-var _visibility_height_range = 800
+var _lowest_avaible_lod = null
+
 
 
 func _dither_density(fade: float, pos: Vector2):
@@ -95,7 +98,7 @@ func _get_density_texture():
 	return it
 
 
-func _generate_subset(_userdata):
+func _generate_subset():
 	var rng = RandomNumberGenerator.new()
 
 	var sampled_points = _sample_by_denisty()
@@ -105,7 +108,7 @@ func _generate_subset(_userdata):
 	else:
 		self.visible = true
 	self.global_transform.origin = Vector3(chunk_position.x, 0, chunk_position.y)
-	#TODO: setup AABB ?
+
 	rng.seed = int(self.global_transform.origin.length())
 	if sampled_points.size() > self.multimesh.instance_count:
 		self.multimesh.instance_count = sampled_points.size()
@@ -131,33 +134,56 @@ func _generate_subset(_userdata):
 		self.multimesh.set_instance_transform(i, t)
 
 
+func _setup_lod_with_visiblity(new_mesh: Mesh):
+	if new_mesh == null:
+		self.visible = false
+	else:
+		self.multimesh.mesh = new_mesh
+		self.visible = true
+
 func update_lod(new_lod: int):
 	self.lod = new_lod
+	if self.shadows_type == SHADOW_CASTING.ONLY_SHADOW:
+		self.multimesh.mesh = self._lowest_avaible_lod
+		return
 	match self.lod:
 		0:
-			self.multimesh.mesh = mesh
+			_setup_lod_with_visiblity(mesh)
 		1:
-			self.multimesh.mesh = mesh1
+			_setup_lod_with_visiblity(mesh1)
+		2:
+			_setup_lod_with_visiblity(mesh2)
 
 
 func _ready():
 	self.visible = false
+	if mesh2 != null:
+		self._lowest_avaible_lod = mesh2
+	elif mesh1 != null:
+		self._lowest_avaible_lod = mesh1
+	else:
+		self._lowest_avaible_lod = mesh
 	self.multimesh = MultiMesh.new()
 	self.multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	self.multimesh.color_format = MultiMesh.COLOR_NONE
 	self.multimesh.custom_data_format = MultiMesh.CUSTOM_DATA_NONE
 	self.multimesh.instance_count = maximum_instance_count
 	self.multimesh.visible_instance_count = 0
-	update_lod(self.lod)
-	if enable_shadows:
-		self.cast_shadow = SHADOW_CASTING_SETTING_ON
-	else:
-		self.cast_shadow = SHADOW_CASTING_SETTING_OFF
+
+	match self.shadows_type:
+		SHADOW_CASTING.ON:
+			self.cast_shadow = SHADOW_CASTING_SETTING_ON
+		SHADOW_CASTING.OFF:
+			self.cast_shadow = SHADOW_CASTING_SETTING_OFF
+		SHADOW_CASTING.ONLY_SHADOW:
+			self.cast_shadow = SHADOW_CASTING_SETTING_SHADOWS_ONLY
 	for i in range(self.multimesh.instance_count):
 		var t = Transform(Basis(), Vector3(0, 0, 0))
 		self.multimesh.set_instance_transform(i, t)
-	_generate_subset(null)
+	_generate_subset()
+	update_lod(self.lod)
 
 
 func generate():
-	_generate_subset(null)
+	_generate_subset()
+	update_lod(self.lod)
