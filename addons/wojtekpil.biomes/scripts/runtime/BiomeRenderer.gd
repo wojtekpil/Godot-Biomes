@@ -7,6 +7,7 @@ export (float) var visibility_range = 45
 export (float) var lod0_range = 15
 export (float) var lod1_range = 30
 export (NodePath) var terrain = null
+export (float) var chunk_margin = 1.0
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
@@ -49,6 +50,7 @@ func _create_chunk_renderer(
 	chunk.terrain_size = terrain_size
 	chunk.terrain_pivot = terrain_pivot
 	chunk.terrain = _terrain
+	chunk.aabb_margin = chunk_margin
 	if is_new:
 		chunk.call_deferred("generate")
 		self.add_child(chunk)
@@ -193,9 +195,9 @@ func _on_data_region_changed(x, y, w, h, channel):
 	for bi in _biomes:
 		var c = _biomes[bi]
 		if (
-			c.chunk_position.x >= x
-			&& c.chunk_position.x < x + w
-			&& c.chunk_position.y >= y
+			c.chunk_position.x + chunk_size.x >= x
+			&& c.chunk_position.x <= x + w
+			&& c.chunk_position.y + chunk_size.y >= y
 			&& c.chunk_position.y < y + w
 		):
 			c.call_deferred("update_chunk")

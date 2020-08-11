@@ -8,6 +8,7 @@ export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 export (int) var lod = 0
 export (bool) var enabled = true
+export (float) var aabb_margin = 1.0
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
@@ -68,8 +69,8 @@ func create_subset_renderer(biome_placement_node, dithering_scale, shadows):
 
 func _update_aabb():
 	self.aabb = AABB(
-		Vector3(chunk_position.x, -_visibility_height_range / 2, chunk_position.y),
-		Vector3(chunk_size.x, _visibility_height_range, chunk_size.y)
+		Vector3(chunk_position.x - aabb_margin, -_visibility_height_range / 2, chunk_position.y - aabb_margin),
+		Vector3(chunk_size.x + 2 * aabb_margin, _visibility_height_range, chunk_size.y + 2 * aabb_margin)
 	)
 
 func generate():
