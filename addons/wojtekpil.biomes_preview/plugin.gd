@@ -13,8 +13,10 @@ func _exit_tree():
 
 # Always active
 func handles(node: Object):
-	set_edited_scene(node.get_tree().get_edited_scene_root())
-	return true
+	if node.has_method("get_tree"):
+		set_edited_scene(node.get_tree().get_edited_scene_root())
+		return true
+	return false
 
 
 func update_all_biome_nodes(node, camera):
