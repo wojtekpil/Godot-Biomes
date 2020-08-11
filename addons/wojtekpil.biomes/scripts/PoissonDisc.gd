@@ -4,6 +4,7 @@ signal stamp_updated(image)
 
 export (Vector2) var stamp_size = Vector2(256, 256)
 export (float) var new_points_retries = 10
+export (bool) var fill_pass_enabled = false
 
 var _biome_placement_nodes: Array = []
 var _grid: Array = []
@@ -227,22 +228,23 @@ func generate_stampling():
 		acumulated_density -= density
 		print("Generating group id: ", bpn.id)
 	print("First pass completed")
-
-	for i in range(_biome_placement_nodes.size() - 2, -1, -1):
-		var bpn = _biome_placement_nodes[i]
-		sample_points = generate_poisson(
-			bpn.id,
-			stamp_size.x,
-			stamp_size.y,
-			bpn.footprint,
-			1.0,
-			bpn.color * 0.7,
-			new_points_retries,
-			sample_points,
-			true
-		)
-		print("Generating group id: ", bpn.id)
-	print("Second pass completed")
+	
+	if fill_pass_enabled:
+		for i in range(_biome_placement_nodes.size() - 2, -1, -1):
+			var bpn = _biome_placement_nodes[i]
+			sample_points = generate_poisson(
+				bpn.id,
+				stamp_size.x,
+				stamp_size.y,
+				bpn.footprint,
+				1.0,
+				bpn.color * 0.7,
+				new_points_retries,
+				sample_points,
+				true
+			)
+			print("Generating group id: ", bpn.id)
+		print("Second pass completed")
 
 	_sample_points = sample_points.duplicate()
 

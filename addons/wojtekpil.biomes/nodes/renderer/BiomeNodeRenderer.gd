@@ -8,7 +8,7 @@ var _density: Resource = null
 var _heightmap: Resource = null
 var _file_dialog: FileDialog = null
 var _stamp_data: Dictionary = {}
-var _stamp_size: Vector2 = Vector2(0,0)
+var _stamp_size: Vector2 = Vector2(0, 0)
 
 const BiomePlacementNode = preload("res://addons/wojtekpil.biomes/scripts/BiomePlacementNode.gd")
 const BiomeResource = preload("res://addons/wojtekpil.biomes/scripts/BiomeResource.gd")
@@ -38,6 +38,7 @@ func setup_dialogs(base_control):
 	_file_dialog.connect("file_selected", self, "_on_FileDialog_file_selected")
 	_file_dialog.hide()
 	base_control.add_child(_file_dialog)
+
 
 func is_multiple_connections_enabled_on_slot(_slot: int):
 	return _slot == SUBSET_PORT
@@ -94,6 +95,7 @@ func generate_biome():
 	print(_heightmap)
 	print(_resources)
 	print("Stamp size %d " % _stamp_data.size())
+	_sampling_provider.fill_pass_enabled = $"HBoxContainer/FillPassButton".pressed
 	_sampling_provider.setup_biome_placement_nodes(_resources)
 
 
@@ -115,3 +117,12 @@ func _on_FileDialog_file_selected(fpath):
 	b_res.biome_stamp = _stamp_data
 	b_res.biome_stamp_size = _stamp_size
 	ResourceSaver.save(fpath, b_res)
+
+
+func restore_custom_data(data := {}):
+	if "fill_pass_enabled" in data:
+		$"HBoxContainer/FillPassButton".pressed = data['fill_pass_enabled']
+
+
+func export_custom_data():
+	return {'fill_pass_enabled': $"HBoxContainer/FillPassButton".pressed}
