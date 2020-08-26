@@ -3,6 +3,7 @@ extends Control
 
 var BiomeNode = load("res://addons/wojtekpil.biomes/nodes/BiomeNode.gd")
 var BiomeNodeMesh = load("res://addons/wojtekpil.biomes/nodes/mesh/BiomeNodeMesh.tscn")
+var BiomeNodeCollisionShape = load("res://addons/wojtekpil.biomes/nodes/collision_shape/BiomeNodeCollisionShape.tscn")
 var BiomeNodeTexture = load("res://addons/wojtekpil.biomes/nodes/texture/BiomeNodeTexture.tscn")
 var BiomeNodeZylannTexture = load("res://addons/wojtekpil.biomes/nodes/zylann_texture/BiomeNodeZylannTexture.tscn")
 var BiomeNodeSubset = load("res://addons/wojtekpil.biomes/nodes/subset/BiomeNodeSubset.tscn")
@@ -132,7 +133,18 @@ func _on_AddMeshNodeButton_pressed():
 	assert(BiomeNodeMesh.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeMesh.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
+	node.set_preview_provider(_preview_provider)
+	node.call_deferred("setup_dialogs", self)
+	_ge.add_child(node)
+
+
+func _on_AddCollisionShapeNodeButton_pressed():
+	assert(BiomeNodeCollisionShape, "Failed to load node")
+	assert(BiomeNodeCollisionShape.can_instance(), "Cannot create instance of node")
+	var node = BiomeNodeCollisionShape.instance()
+	assert(node is BiomeNode)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	node.set_preview_provider(_preview_provider)
 	node.call_deferred("setup_dialogs", self)
 	_ge.add_child(node)
@@ -143,7 +155,7 @@ func _on_AddSubsetNodeButton_pressed():
 	assert(BiomeNodeSubset.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeSubset.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	_ge.add_child(node)
 
 
@@ -152,7 +164,7 @@ func _on_AddRendererNodeButton_pressed():
 	assert(BiomeNodeRenderer.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeRenderer.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	node.call_deferred("setup_dialogs", self)
 	_ge.add_child(node)
 
@@ -162,7 +174,7 @@ func _on_AddTextureNodeButton_pressed():
 	assert(BiomeNodeTexture.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeTexture.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	node.call_deferred("setup_dialogs", self)
 	_ge.add_child(node)
 
@@ -172,7 +184,7 @@ func _on_AddZylannTextureNodeButton_pressed():
 	assert(BiomeNodeZylannTexture.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeZylannTexture.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	_ge.add_child(node)
 
 
@@ -181,7 +193,7 @@ func _on_AddTransformNodeButton_pressed():
 	assert(BiomeNodeTransform.can_instance(), "Cannot create instance of node")
 	var node = BiomeNodeTransform.instance()
 	assert(node is BiomeNode)
-	node.offset += Vector2(20, 20)
+	node.offset += _ge.scroll_offset + Vector2(100, 100)
 	_ge.add_child(node)
 
 

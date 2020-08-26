@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/wojtekpil.biomes/nodes/collision_shape/BiomeNodeCollisionShape.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+[node name="BiomeNodeShape" type="GraphNode"]
+margin_right = 186.0
+margin_bottom = 127.0
+rect_clip_content = true
+title = "CollisionShape"
+show_close = true
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 0, 0, 0, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 1
+slot/0/right_color = Color( 1, 0, 0, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 170.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 154.0
+margin_bottom = 24.0
+
+[node name="PathLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+margin_right = 126.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="SelectButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 130.0
+margin_right = 154.0
+margin_bottom = 24.0
+text = "..."
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 154.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 64, 64 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="MeshPreview" type="TextureRect" parent="VBoxContainer/Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 64 )
+expand = true
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="close_request" from="." to="." method="_on_BiomeNodeMesh_close_request"]
+[connection signal="resize_request" from="." to="." method="_on_BiomeNodeMesh_resize_request"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SelectButton" to="." method="_on_SelectButton_pressed"]

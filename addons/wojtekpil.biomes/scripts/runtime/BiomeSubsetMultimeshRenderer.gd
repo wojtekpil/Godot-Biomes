@@ -10,6 +10,7 @@ export (int) var maximum_instance_count = 100
 export (Mesh) var mesh = null
 export (Mesh) var mesh1 = null
 export (Mesh) var mesh2 = null
+export (Shape) var shape = null
 export (int) var lod = 2
 export (Transform) var terrain_inv_transform
 export (Vector2) var chunk_size = Vector2(10, 10)
@@ -24,6 +25,8 @@ export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
 var _lowest_avaible_lod = null
+
+var _collsion_node = null
 
 
 
@@ -98,10 +101,32 @@ func _get_density_texture():
 	return it
 
 
+func _generate_collision():
+	#Romove all children nodes
+	for n in get_children():
+		remove_child(n)
+
+	if shape == null:
+		return
+	# Create one static body
+	var collision_node = StaticBody.new()
+	add_child(collision_node)
+
+	for mesh_index in range(multimesh.instance_count):
+		var position = multimesh.get_instance_transform(mesh_index)
+
+		# Create many collision shapes
+		var collision_shape = CollisionShape.new()
+		collision_shape.shape = shape
+		collision_shape.transform = position
+		collision_node.add_child(collision_shape)
+
+
 func _generate_subset():
 	var rng = RandomNumberGenerator.new()
 
 	var sampled_points = _sample_by_denisty()
+
 	if sampled_points.size() == 0:
 		self.visible = false
 		return
@@ -132,13 +157,14 @@ func _generate_subset():
 		var t = Transform(tb)
 		t.origin = position
 		self.multimesh.set_instance_transform(i, t)
+	_generate_collision()
 
 
 func _setup_lod_with_visiblity(new_mesh: Mesh):
+	self.multimesh.mesh = new_mesh
 	if new_mesh == null:
 		self.visible = false
 	else:
-		self.multimesh.mesh = new_mesh
 		self.visible = true
 
 func update_lod(new_lod: int):

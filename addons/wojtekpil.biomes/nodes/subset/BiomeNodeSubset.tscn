@@ -26,9 +26,9 @@ slot/2/left_color = Color( 1, 0, 0, 1 )
 slot/2/right_enabled = false
 slot/2/right_type = 2
 slot/2/right_color = Color( 0, 1, 0, 1 )
-slot/3/left_enabled = false
-slot/3/left_type = 5
-slot/3/left_color = Color( 1, 0, 0, 1 )
+slot/3/left_enabled = true
+slot/3/left_type = 1
+slot/3/left_color = Color( 1, 1, 0, 1 )
 slot/3/right_enabled = false
 slot/3/right_type = 2
 slot/3/right_color = Color( 0, 1, 0, 1 )
@@ -38,24 +38,36 @@ slot/4/left_color = Color( 1, 0, 0, 1 )
 slot/4/right_enabled = false
 slot/4/right_type = 2
 slot/4/right_color = Color( 0, 1, 0, 1 )
-slot/5/left_enabled = true
+slot/5/left_enabled = false
 slot/5/left_type = 5
-slot/5/left_color = Color( 0, 1, 1, 1 )
+slot/5/left_color = Color( 1, 0, 0, 1 )
 slot/5/right_enabled = false
 slot/5/right_type = 2
 slot/5/right_color = Color( 0, 1, 0, 1 )
 slot/6/left_enabled = false
 slot/6/left_type = 5
-slot/6/left_color = Color( 1, 0, 0, 1 )
+slot/6/left_color = Color( 0, 1, 1, 1 )
 slot/6/right_enabled = false
 slot/6/right_type = 2
 slot/6/right_color = Color( 0, 1, 0, 1 )
 slot/7/left_enabled = false
-slot/7/left_type = 0
-slot/7/left_color = Color( 1, 1, 1, 1 )
+slot/7/left_type = 5
+slot/7/left_color = Color( 0, 1, 1, 1 )
 slot/7/right_enabled = false
-slot/7/right_type = 0
-slot/7/right_color = Color( 1, 1, 1, 1 )
+slot/7/right_type = 2
+slot/7/right_color = Color( 0, 1, 0, 1 )
+slot/8/left_enabled = true
+slot/8/left_type = 5
+slot/8/left_color = Color( 0, 1, 1, 1 )
+slot/8/right_enabled = false
+slot/8/right_type = 2
+slot/8/right_color = Color( 0, 1, 0, 1 )
+slot/9/left_enabled = false
+slot/9/left_type = 5
+slot/9/left_color = Color( 1, 0, 0, 1 )
+slot/9/right_enabled = false
+slot/9/right_type = 2
+slot/9/right_color = Color( 0, 1, 0, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -82,11 +94,18 @@ margin_right = 175.0
 margin_bottom = 68.0
 text = "Mesh LOD2"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="."]
+[node name="ColliderLabel" type="Label" parent="."]
 margin_left = 16.0
 margin_top = 69.0
 margin_right = 175.0
-margin_bottom = 93.0
+margin_bottom = 83.0
+text = "CollisionShape"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 84.0
+margin_right = 175.0
+margin_bottom = 108.0
 
 [node name="Label" type="Label" parent="HBoxContainer4"]
 margin_top = 5.0
@@ -107,9 +126,9 @@ allow_greater = true
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="."]
 margin_left = 16.0
-margin_top = 94.0
+margin_top = 109.0
 margin_right = 175.0
-margin_bottom = 118.0
+margin_bottom = 133.0
 
 [node name="Label" type="Label" parent="HBoxContainer5"]
 margin_top = 5.0
@@ -124,14 +143,14 @@ margin_left = 85.0
 margin_right = 159.0
 margin_bottom = 24.0
 max_value = 1.0
-step = 0.01
+step = 0.001
 value = 0.5
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="."]
 margin_left = 16.0
-margin_top = 119.0
+margin_top = 134.0
 margin_right = 175.0
-margin_bottom = 159.0
+margin_bottom = 174.0
 
 [node name="Label" type="Label" parent="HBoxContainer7"]
 margin_top = 13.0
@@ -146,18 +165,37 @@ margin_left = 83.0
 margin_right = 159.0
 margin_bottom = 40.0
 
+[node name="HBoxContainer8" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 175.0
+margin_right = 175.0
+margin_bottom = 215.0
+
+[node name="Label" type="Label" parent="HBoxContainer8"]
+margin_top = 13.0
+margin_right = 79.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Fill Pass"
+align = 2
+
+[node name="FillPassButton" type="CheckButton" parent="HBoxContainer8"]
+margin_left = 83.0
+margin_right = 159.0
+margin_bottom = 40.0
+
 [node name="MeshTransform" type="Label" parent="."]
 margin_left = 16.0
-margin_top = 160.0
+margin_top = 216.0
 margin_right = 175.0
-margin_bottom = 174.0
+margin_bottom = 230.0
 text = "Mesh Transform"
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="."]
 margin_left = 16.0
-margin_top = 175.0
+margin_top = 231.0
 margin_right = 175.0
-margin_bottom = 195.0
+margin_bottom = 251.0
 
 [node name="Label" type="Label" parent="HBoxContainer6"]
 margin_top = 3.0

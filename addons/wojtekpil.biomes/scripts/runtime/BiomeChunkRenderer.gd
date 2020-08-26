@@ -9,6 +9,7 @@ export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 export (int) var lod = 0
 export (bool) var enabled = true
 export (float) var aabb_margin = 1.0
+export (bool) var enable_shadow_proxy = false
 
 enum MESH_RENDER { Multimesh, Particles, Particles_GPU_density }
 export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
@@ -46,12 +47,16 @@ func create_subset_renderer(biome_placement_node, dithering_scale, shadows):
 	subset.mesh = biome_placement_node.mesh
 	subset.mesh1 = biome_placement_node.mesh1
 	subset.mesh2 = biome_placement_node.mesh2
+	subset.shape = biome_placement_node.shape
 	subset.lod = lod
 	subset.chunk_size = chunk_size
 	subset.chunk_position = chunk_position
 	subset.stamp_size = biome_resource.biome_stamp_size
 	if shadows:
-		subset.shadows_type = subset.SHADOW_CASTING.ONLY_SHADOW
+		if enable_shadow_proxy:
+			subset.shadows_type = subset.SHADOW_CASTING.ONLY_SHADOW
+		else:
+			subset.shadows_type = subset.SHADOW_CASTING.ON
 	else:
 		subset.shadows_type = subset.SHADOW_CASTING.OFF
 	subset.densitymap = biome_resource.get_densitymap(terrain)
@@ -82,11 +87,11 @@ func generate():
 	var biome_data: Array = biome_resource.get_biome_subsets()
 	var dithering_scale = biome_resource.get_min_footprint()
 	for x in biome_data:
-		biome = create_subset_renderer(x, dithering_scale, false)
+		biome = create_subset_renderer(x, dithering_scale, x.cast_shadow && not enable_shadow_proxy)
 		biome.sampling_array = biome_resource.biome_stamp.get(x.id, [])
 		biome.generate()
 		_biomes_subsets.append(biome)
-		if x.cast_shadow: #add shadow proxy
+		if x.cast_shadow && enable_shadow_proxy: #add shadow proxy
 			var biome_shadow = create_subset_renderer(x, dithering_scale, true)
 			biome_shadow.sampling_array = biome.sampling_array
 			biome_shadow.generate()
