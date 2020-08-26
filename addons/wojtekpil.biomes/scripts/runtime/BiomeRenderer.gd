@@ -116,12 +116,11 @@ func _process(_delta: float):
 	update(_viewer_pos_world)
 
 
-func _calculate_lod(cr0, cr1, viewer_cx, viewer_cz, chunk_pos):
-	var absx = abs(chunk_pos.x - viewer_cx)
-	var absz = abs(chunk_pos.y - viewer_cz)
-	if absx > cr1 || absz > cr1:
+func _calculate_lod(lod0_range_sqrt, lod1_range_sqrt, loc_viewer_2d, wpos2d):
+	var dist = wpos2d.distance_squared_to(loc_viewer_2d)
+	if dist > lod1_range_sqrt:
 		return  2
-	if absx > cr0 || absz > cr0:
+	if dist > lod0_range_sqrt:
 		return  1
 	else:
 		return 0
@@ -140,10 +139,14 @@ func update(viewer_pos: Vector3):
 	var viewer_cx = local_viewer_pos.x / chunk_size.x
 	var viewer_cz = local_viewer_pos.z / chunk_size.y
 
+	var loc_viewer_2d = Vector2(local_viewer_pos.x, local_viewer_pos.z)
+
 	var cr = int(visibility_range) / chunk_size.x + 1
 
-	var cr0 = int(lod0_range) / chunk_size.x + 1
-	var cr1 = int(lod1_range) / chunk_size.x + 1
+	var visibility_range_sqrt = visibility_range * visibility_range
+
+	var lod0_range_sqrt = lod0_range * lod0_range;
+	var lod1_range_sqrt = lod1_range * lod1_range;
 
 	var cmin_x = viewer_cx - cr
 	var cmin_z = viewer_cz - cr
@@ -166,7 +169,10 @@ func update(viewer_pos: Vector3):
 	for cz in range(cmin_z, cmax_z + 1):
 		for cx in range(cmin_x, cmax_x + 1):
 			var cpos2d = Vector2(cx, cz)
-			var lod = _calculate_lod(cr0, cr1, viewer_cx, viewer_cz, cpos2d)
+			var wpos2d = cpos2d * chunk_size
+			if wpos2d.distance_squared_to(loc_viewer_2d) > visibility_range_sqrt:
+				continue
+			var lod = _calculate_lod(lod0_range_sqrt, lod1_range_sqrt, loc_viewer_2d, wpos2d + chunk_size * 0.5)
 			if _biomes.has(cpos2d):
 				_biomes.get(cpos2d).update_lod(lod)
 				continue
@@ -180,7 +186,8 @@ func update(viewer_pos: Vector3):
 	var to_recycle: Array = []
 	#we cant remove biome from dictionary when iterating so we create a list helper
 	for bi in _biomes:
-		if bi.x >= int(cmin_x) && bi.x < int(cmax_x) + 1 && bi.y >= int(cmin_z) && bi.y < int(cmax_z) + 1:
+		var wpos2d = bi * chunk_size
+		if wpos2d.distance_squared_to(loc_viewer_2d) <= visibility_range_sqrt:
 			continue
 		to_recycle.append(bi)
 	for cpos2d in to_recycle:
