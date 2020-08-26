@@ -49,7 +49,7 @@ func mix_pop_list(list: Array):
 func generate_random_point_around(point: Object, min_dist: float):
 	var r1 = randf()
 	var r2 = randf()
-	var radius = min_dist * (r1 + 1.0)
+	var radius = (min_dist + point.radius)/2.0 * (r1 + 1.0)
 	var stamp_point = StampPoint.new()
 	#random angle
 	var angle = 2.0 * PI * r2
@@ -122,9 +122,7 @@ func square_around_point(grid, grid_point, neighbour_distance):
 func in_neighbourhood(grid, point, mindist, cell_size, fill_pass = false):
 	var real_grid = int(mindist / _min_max_distance.x)
 
-	var significant_grids = 2
-	if fill_pass == true:
-		significant_grids = max(ceil(_min_max_distance.y / mindist) * 2, 2)
+	var significant_grids = max(ceil(_min_max_distance.y / mindist) * 2, 2)
 	var grid_point = position_to_grid(point, cell_size)
 	var cells_around_point = square_around_point(grid, grid_point, real_grid * significant_grids)
 	for cell in cells_around_point:
@@ -199,7 +197,7 @@ func generate_poisson(
 		current_pass_sample_points.remove(rand_index)
 		if sample_index >= 0:
 			sample_points.remove(sample_index)
-		removal_count -= 1
+			removal_count -= 1
 
 	return sample_points
 
@@ -212,7 +210,7 @@ func generate_stampling():
 	for i in range(0, _biome_placement_nodes.size()):
 		scalar += _biome_placement_nodes[i].density
 
-	for i in range(0, _biome_placement_nodes.size()):
+	for i in range(_biome_placement_nodes.size() - 1, -1, -1):
 		var bpn = _biome_placement_nodes[i]
 		var density = bpn.density / scalar
 		sample_points = generate_poisson(
@@ -225,13 +223,18 @@ func generate_stampling():
 			new_points_retries,
 			sample_points
 		)
+
+		print("Left: ", acumulated_density, " Density scaled: ", density)
+		
+		print("Generating group id: ", bpn.id, " density: ", density / max(acumulated_density, 0.001))
 		acumulated_density -= density
-		print("Generating group id: ", bpn.id)
 	print("First pass completed")
 	
 	if fill_pass_enabled:
 		for i in range(_biome_placement_nodes.size() - 2, -1, -1):
 			var bpn = _biome_placement_nodes[i]
+			if not bpn.fill_pass:
+				continue
 			sample_points = generate_poisson(
 				bpn.id,
 				stamp_size.x,
