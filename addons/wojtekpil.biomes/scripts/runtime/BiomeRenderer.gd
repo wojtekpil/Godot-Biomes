@@ -27,6 +27,10 @@ func _bootstrap_biome():
 	_biome_resource.load(biome)
 
 
+func get_biomes():
+	return _biomes;
+
+
 func _create_chunk_renderer(
 	chunk_position: Vector2,
 	terrain_inv_transform: Transform,
@@ -55,7 +59,7 @@ func _create_chunk_renderer(
 		chunk.call_deferred("generate")
 		self.add_child(chunk)
 	else:
-		chunk.update_chunk()
+		chunk.call_deferred("update_chunk")
 	return chunk
 
 
@@ -177,7 +181,7 @@ func update(viewer_pos: Vector3):
 				_biomes.get(cpos2d).update_lod(lod)
 				continue
 			var chunk = _create_chunk_renderer(
-				cpos2d * chunk_size, terrain_inv_transform, terrain_size, terrain_pivot, lod
+				wpos2d, terrain_inv_transform, terrain_size, terrain_pivot, lod
 			)
 			chunk.enabled = true
 			chunk.visible = true

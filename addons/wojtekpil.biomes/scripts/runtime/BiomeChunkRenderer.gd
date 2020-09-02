@@ -16,11 +16,13 @@ export (MESH_RENDER) var mesh_renderer = MESH_RENDER.Multimesh
 
 var terrain: Node = null
 
-var _visibility_height_range = 800
+var _visibility_height_range = 400
 var _biomes_subsets = []
 const BiomeSubsetParticlesRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetParticlesRenderer.gd")
 const BiomeSubsetMultimeshRenderer = preload("res://addons/wojtekpil.biomes/scripts/runtime/BiomeSubsetMultimeshRenderer.gd")
 
+func get_subsets():
+	return _biomes_subsets
 
 func _update_mesh_subsets(new_lod: int):
 	for x in _biomes_subsets:
@@ -49,6 +51,8 @@ func create_subset_renderer(biome_placement_node, dithering_scale, shadows):
 	subset.mesh2 = biome_placement_node.mesh2
 	subset.shape = biome_placement_node.shape
 	subset.lod = lod
+	subset.lod1_density_scale = biome_placement_node.lod1_density_scale
+	subset.lod2_density_scale = biome_placement_node.lod2_density_scale
 	subset.chunk_size = chunk_size
 	subset.chunk_position = chunk_position
 	subset.stamp_size = biome_resource.biome_stamp_size
@@ -87,6 +91,8 @@ func generate():
 	var biome_data: Array = biome_resource.get_biome_subsets()
 	var dithering_scale = biome_resource.get_min_footprint()
 	for x in biome_data:
+		if x.enabled == false:
+			continue;
 		biome = create_subset_renderer(x, dithering_scale, x.cast_shadow && not enable_shadow_proxy)
 		biome.sampling_array = biome_resource.biome_stamp.get(x.id, [])
 		biome.generate()
@@ -104,10 +110,15 @@ func update_chunk():
 		x.chunk_position = chunk_position
 		x.generate()
 
+func update_subsets_visibility(visibility: bool):
+	for x in _biomes_subsets:
+		x.update_visibility(visibility)
 
 func _camera_entered(_camera: Camera):
 	self.visible = enabled
+	#update_subsets_visibility(enabled)
 
 
 func _camera_exited(_camera: Camera):
 	self.visible = false
+	#update_subsets_visibility(false)

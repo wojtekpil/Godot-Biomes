@@ -1,7 +1,7 @@
 extends MultiMeshInstance
 
 export (Array) var sampling_array = []
-enum SHADOW_CASTING {ON, OFF, ONLY_SHADOW}
+enum SHADOW_CASTING { ON, OFF, ONLY_SHADOW }
 export (SHADOW_CASTING) var shadows_type = SHADOW_CASTING.OFF
 export (Image) var densitymap
 export (Image) var heightmap
@@ -20,14 +20,30 @@ export (float) var dithering_scale = 10.0
 export (Vector3) var object_scale = Vector3(1, 1, 1)
 export (float) var object_scale_variation = 0.3
 export (float) var object_rotation_variation = 3.14 * 2.0
+export (float) var lod1_density_scale = 1.0
+export (float) var lod2_density_scale = 1.0
 
 export (Vector2) var terrain_size = Vector2(1, 1)
 export (Vector2) var terrain_pivot = Vector2(0.5, 0.5)
 
 var _lowest_avaible_lod = null
+var _current_lod_density = 1.0
 
 var _collsion_node = null
 
+var _backuped_visibility = 0
+
+
+func get_visible_count():
+	return multimesh.visible_instance_count
+
+
+func update_visibility(visibility: bool):
+	if visibility == false:
+		_backuped_visibility = multimesh.visible_instance_count
+		multimesh.visible_instance_count = 0
+	elif multimesh.visible_instance_count == 0:
+		multimesh.visible_instance_count = _backuped_visibility
 
 
 func _dither_density(fade: float, pos: Vector2):
@@ -82,7 +98,7 @@ func _sample_by_denisty():
 
 		var color = densitymap.get_pixelv(tex_coords)
 
-		if _dither_density(1.0 - color.r, pos / dithering_scale):
+		if _dither_density(1.0 - color.r * _current_lod_density, pos / dithering_scale):
 			#get heighmap
 			color.r = 0.0
 			if heightmap != null:
@@ -102,24 +118,30 @@ func _get_density_texture():
 
 
 func _generate_collision():
-	#Romove all children nodes
-	for n in get_children():
-		remove_child(n)
-
-	if shape == null:
+	var collision_node = null
+	if shape == null || Engine.is_editor_hint():
 		return
-	# Create one static body
-	var collision_node = StaticBody.new()
-	add_child(collision_node)
+	for n in get_children():
+		if n is StaticBody:
+			collision_node = n
 
-	for mesh_index in range(multimesh.instance_count):
-		var position = multimesh.get_instance_transform(mesh_index)
+	if collision_node == null:
+		collision_node = StaticBody.new()
+		add_child(collision_node)
+		for x in sampling_array.size():
+			var collision_shape = CollisionShape.new()
+			collision_shape.shape = shape
+			collision_node.add_child(collision_shape)
 
-		# Create many collision shapes
-		var collision_shape = CollisionShape.new()
-		collision_shape.shape = shape
-		collision_shape.transform = position
-		collision_node.add_child(collision_shape)
+	var i = 0
+	for col_shape in collision_node.get_children():
+		if i < multimesh.visible_instance_count:
+			var position = multimesh.get_instance_transform(i)
+			col_shape.transform = position
+			col_shape.disabled = false
+		else:
+			col_shape.disabled = true
+		i += 1
 
 
 func _generate_subset():
@@ -167,18 +189,27 @@ func _setup_lod_with_visiblity(new_mesh: Mesh):
 	else:
 		self.visible = true
 
+
 func update_lod(new_lod: int):
 	self.lod = new_lod
 	if self.shadows_type == SHADOW_CASTING.ONLY_SHADOW:
 		self.multimesh.mesh = self._lowest_avaible_lod
 		return
+
+	var old_density = _current_lod_density
 	match self.lod:
 		0:
 			_setup_lod_with_visiblity(mesh)
+			_current_lod_density = 1.0
 		1:
 			_setup_lod_with_visiblity(mesh1)
+			_current_lod_density = lod1_density_scale
 		2:
 			_setup_lod_with_visiblity(mesh2)
+			_current_lod_density = lod2_density_scale
+
+	if _current_lod_density != old_density:
+		_generate_subset()
 
 
 func _ready():
@@ -206,10 +237,10 @@ func _ready():
 	for i in range(self.multimesh.instance_count):
 		var t = Transform(Basis(), Vector3(0, 0, 0))
 		self.multimesh.set_instance_transform(i, t)
-	_generate_subset()
 	update_lod(self.lod)
+	_generate_subset()
 
 
 func generate():
-	_generate_subset()
 	update_lod(self.lod)
+	_generate_subset()
