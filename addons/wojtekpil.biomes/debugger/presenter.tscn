@@ -1,0 +1,101 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/wojtekpil.biomes/debugger/presenter.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.6, 0.6, 0.6, 0.423529 )
+
+[node name="Controll" type="Control"]
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -200.0
+margin_right = 250.0
+margin_bottom = 1.52588e-05
+rect_min_size = Vector2( 200, 200 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+margin_right = 250.0
+margin_bottom = 200.0
+
+[node name="MainStats" type="GridContainer" parent="Panel/VBoxContainer"]
+margin_right = 250.0
+margin_bottom = 50.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_right = 238.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Chunks in LOD0"
+
+[node name="chunksLod0" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_left = 242.0
+margin_right = 250.0
+margin_bottom = 14.0
+text = "0"
+
+[node name="Label2" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_top = 18.0
+margin_right = 238.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "Chunks in LOD1"
+
+[node name="chunksLod1" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_left = 242.0
+margin_top = 18.0
+margin_right = 250.0
+margin_bottom = 32.0
+text = "0"
+
+[node name="Label3" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_top = 36.0
+margin_right = 238.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+text = "Chunks in LOD2"
+
+[node name="chunksLod2" type="Label" parent="Panel/VBoxContainer/MainStats"]
+margin_left = 242.0
+margin_top = 36.0
+margin_right = 250.0
+margin_bottom = 50.0
+text = "0"
+
+[node name="NodesStats" type="GridContainer" parent="Panel/VBoxContainer"]
+margin_top = 54.0
+margin_right = 250.0
+margin_bottom = 68.0
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/NodesStats"]
+margin_right = 119.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Mesh #0"
+
+[node name="chunksLod0" type="Label" parent="Panel/VBoxContainer/NodesStats"]
+margin_left = 123.0
+margin_right = 131.0
+margin_bottom = 14.0
+text = "0"
